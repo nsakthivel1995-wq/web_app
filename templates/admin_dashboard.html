@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Staff Admin — RS Digitizing</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --sky-100:#e0f2fe;--sky-200:#bae6fd;--sky-400:#38bdf8;--sky-500:#0ea5e9;--sky-600:#0284c7;
+      --blush:#fce7f3;--ink:#1a2340;--muted:#64748b;--ok:#16a34a;--warn:#d97706;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:'DM Sans',sans-serif;color:var(--ink);
+      background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 35%,#f8fbff 65%,#fce7f3 100%) fixed;
+      min-height:100vh;display:flex;flex-direction:column;
+    }
+    .wrap{max-width:1180px;margin:0 auto;width:100%;padding:28px 20px 60px;flex:1;}
+    header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
+    header .brand-block{display:flex;align-items:center;gap:12px;min-width:0;}
+    header img{height:42px;width:auto;flex-shrink:0;}
+    h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;line-height:1.2;}
+    h1 span{color:var(--sky-600);}
+    .badge{display:inline-block;background:rgba(56,189,248,.12);color:var(--sky-600);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;margin-left:8px;}
+    a.back{color:var(--muted);text-decoration:none;font-size:14px;}
+    a.back:hover{color:var(--sky-600);}
+    @media (max-width:560px){
+      header{flex-direction:column;align-items:flex-start;}
+      header .btn{width:100%;justify-content:center;}
+      h1{font-size:24px;}
+    }
+
+    .tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+    .tab{padding:9px 18px;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid rgba(186,230,253,.6);
+      color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;transition:.2s;}
+    .tab.active,.tab:hover{background:var(--sky-500);color:#fff;border-color:var(--sky-500);}
+
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px;}
+    .stat{background:rgba(255,255,255,.75);backdrop-filter:blur(12px);border:1px solid rgba(186,230,253,.55);
+      border-radius:16px;padding:16px 18px;}
+    .stat .num{font-size:26px;font-weight:600;}
+    .stat .lbl{color:var(--muted);font-size:13px;}
+
+    .card{background:rgba(255,255,255,.8);backdrop-filter:blur(12px);border:1px solid rgba(186,230,253,.55);
+      border-radius:18px;padding:18px 20px;margin-bottom:22px;box-shadow:0 4px 24px rgba(14,165,233,.06);}
+    .card h2{font-size:16px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .btn{display:inline-flex;align-items:center;gap:6px;background:var(--sky-500);color:#fff;border:none;
+      padding:9px 16px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:.2s;}
+    .btn:hover{background:var(--sky-600);}
+    .btn-ghost{background:rgba(56,189,248,.1);color:var(--sky-600);}
+    .btn-ghost:hover{background:rgba(56,189,248,.2);}
+    .btn-sm{padding:5px 11px;font-size:12px;}
+
+    table{width:100%;border-collapse:collapse;font-size:13.5px;}
+    th{text-align:left;color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;
+      letter-spacing:.03em;padding:8px 10px;border-bottom:1px solid rgba(186,230,253,.6);}
+    td{padding:10px;border-bottom:1px solid rgba(186,230,253,.35);}
+    tr:hover td{background:rgba(224,242,254,.35);}
+    .empty{text-align:center;color:var(--muted);padding:26px;}
+    .pill{padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600;}
+    .pill-unpaid{background:rgba(217,119,6,.12);color:var(--warn);}
+    .pill-paid{background:rgba(22,163,74,.12);color:var(--ok);}
+    .msgs{margin-bottom:16px;}
+    .msg{padding:10px 14px;border-radius:10px;margin-bottom:8px;font-size:13.5px;}
+    .msg.success{background:rgba(22,163,74,.1);color:var(--ok);}
+    .msg.error{background:rgba(220,38,38,.1);color:#dc2626;}
+    .d-none{display:none;}
+
+    /* Table responsiveness */
+    .card{overflow-x:auto;}
+
+    /* Footer (matches site-wide footer) */
+    .page-footer{
+      background:linear-gradient(135deg,#0f172a,#1e293b);
+      padding:3rem 20px 1.6rem;margin-top:2.5rem;
+    }
+    .page-footer .ft-inner{max-width:1180px;margin:0 auto;}
+    .ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;margin-bottom:2rem;}
+    .ft-brand{display:flex;align-items:center;gap:10px;margin-bottom:.9rem;}
+    .ft-brand img{height:40px;width:auto;filter:drop-shadow(0 0 6px rgba(56,189,248,.3));}
+    .ft-desc{color:#64748b;line-height:1.82;font-size:.84rem;max-width:260px;}
+    .ft-socials{display:flex;gap:.6rem;margin-top:1.2rem;}
+    .ft-social{
+      width:34px;height:34px;background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);border-radius:9px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.95rem;cursor:pointer;transition:all .25s;color:#94a3b8;
+    }
+    .ft-social:hover{background:rgba(56,189,248,.15);}
+    .ft-col-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:.9rem;font-weight:500;}
+    .ft-links{display:flex;flex-direction:column;gap:.55rem;}
+    .ft-link{color:#64748b;font-size:.85rem;text-decoration:none;transition:color .22s;}
+    .ft-link:hover{color:#38bdf8;}
+    .ft-bottom{
+      border-top:1px solid rgba(255,255,255,.06);
+      padding-top:1.4rem;display:flex;justify-content:space-between;
+      align-items:center;flex-wrap:wrap;gap:.8rem;
+    }
+    .ft-copy{color:#475569;font-size:.78rem;}
+    @media (max-width:700px){
+      .ft-grid{grid-template-columns:1fr;gap:1.6rem;}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand-block">
+      <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitize"/>
+      <div>
+        <h1>Staff <span>Admin</span></h1>
+        <a href="{% url 'dashboard' %}" class="back"><i class="bi bi-arrow-left"></i> Back to dashboard</a>
+      </div>
+    </div>
+    <a href="{% url 'admin_invoice_create' %}" class="btn"><i class="bi bi-plus-lg"></i> New Invoice</a>
+  </header>
+
+  {% if messages %}
+  <div class="msgs">
+    {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="stats">
+    <div class="stat"><div class="num">{{ invoices|length }}</div><div class="lbl">Total Invoices</div></div>
+    <div class="stat"><div class="num">{{ unpaid_count }}</div><div class="lbl">Unpaid</div></div>
+    <div class="stat"><div class="num">{{ paid_count }}</div><div class="lbl">Paid</div></div>
+  </div>
+
+  <div class="tabs">
+    <a href="?view=invoices" class="tab {% if view == 'invoices' %}active{% endif %}"><i class="bi bi-cash-coin"></i> Invoices</a>
+    <a href="?view=orders" class="tab {% if view == 'orders' %}active{% endif %}"><i class="bi bi-box-seam"></i> Orders</a>
+    <a href="?view=quotes" class="tab {% if view == 'quotes' %}active{% endif %}"><i class="bi bi-file-earmark-text"></i> Quotes</a>
+  </div>
+
+  <!-- INVOICES -->
+  <div class="card {% if view != 'invoices' %}d-none{% endif %}">
+    <h2><i class="bi bi-receipt"></i> Billing Invoices</h2>
+    <table>
+      <thead><tr><th>Invoice #</th><th>Customer</th><th>Bill To</th><th>Date</th><th>Due</th><th>Balance Due</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for inv in invoices %}
+        <tr>
+          <td>{{ inv.invoice_number }}</td>
+          <td>{{ inv.user.get_full_name|default:inv.user.email }}</td>
+          <td>{{ inv.bill_to_company|default:"—" }}</td>
+          <td>{{ inv.invoice_date }}</td>
+          <td>{{ inv.due_date|default:"—" }}</td>
+          <td>Rs.{{ inv.balance_due }}</td>
+          <td><span class="pill {% if inv.status == 'paid' %}pill-paid{% else %}pill-unpaid{% endif %}">{{ inv.get_status_display }}</span></td>
+          <td style="white-space:nowrap;">
+            <a href="{% url 'invoice_detail' inv.pk %}" class="btn btn-ghost btn-sm" target="_blank"><i class="bi bi-eye"></i></a>
+            <a href="{% url 'admin_invoice_edit' inv.pk %}" class="btn btn-ghost btn-sm"><i class="bi bi-pencil"></i></a>
+            {% if inv.status == 'unpaid' %}
+            <form method="post" action="{% url 'admin_invoice_mark_paid' inv.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm"><i class="bi bi-check2"></i> Mark Paid</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="empty"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No invoices yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="card {% if view != 'orders' %}d-none{% endif %}">
+    <h2><i class="bi bi-box-seam"></i> Digitizing Orders</h2>
+    <table>
+      <thead><tr><th>#</th><th>Customer</th><th>Design</th><th>Status</th><th>Price</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for o in orders_digitizing %}
+        <tr><td>{{ o.pk }}</td><td>{{ o.user.email }}</td><td>{{ o.design_name }}</td><td>{{ o.get_status_display }}</td>
+          <td>{{ o.price|default:"—" }}</td><td>{{ o.created_at|date:"Y-m-d" }}</td>
+          <td style="white-space:nowrap;">
+            <a class="btn btn-ghost btn-sm" href="{% url 'admin_order_edit' 'digitizing' o.pk %}"><i class="bi bi-pencil"></i></a>
+            <a class="btn btn-ghost btn-sm" href="{% url 'admin_invoice_create' %}?source=order_digitizing&pk={{ o.pk }}"><i class="bi bi-receipt"></i> Invoice</a>
+          </td></tr>
+        {% empty %}<tr><td colspan="7" class="empty">No digitizing orders</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    <h2 style="margin-top:22px;"><i class="bi bi-box-seam"></i> Patches Orders</h2>
+    <table>
+      <thead><tr><th>#</th><th>Customer</th><th>Design</th><th>Status</th><th>Price</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for o in orders_patches %}
+        <tr><td>{{ o.pk }}</td><td>{{ o.user.email }}</td><td>{{ o.design_name }}</td><td>{{ o.get_status_display }}</td>
+          <td>{{ o.price|default:"—" }}</td><td>{{ o.created_at|date:"Y-m-d" }}</td>
+          <td style="white-space:nowrap;">
+            <a class="btn btn-ghost btn-sm" href="{% url 'admin_order_edit' 'patches' o.pk %}"><i class="bi bi-pencil"></i></a>
+            <a class="btn btn-ghost btn-sm" href="{% url 'admin_invoice_create' %}?source=order_patches&pk={{ o.pk }}"><i class="bi bi-receipt"></i> Invoice</a>
+          </td></tr>
+        {% empty %}<tr><td colspan="7" class="empty">No patches orders</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    <h2 style="margin-top:22px;"><i class="bi bi-box-seam"></i> Vector Orders</h2>
+    <table>
+      <thead><tr><th>#</th><th>Customer</th><th>Design</th><th>Status</th><th>Price</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for o in orders_vector %}
+        <tr><td>{{ o.pk }}</td><td>{{ o.user.email }}</td><td>{{ o.design_name }}</td><td>{{ o.get_status_display }}</td>
+          <td>{{ o.price|default:"—" }}</td><td>{{ o.created_at|date:"Y-m-d" }}</td>
+          <td style="white-space:nowrap;">
+            <a class="btn btn-ghost btn-sm" href="{% url 'admin_order_edit' 'vector' o.pk %}"><i class="bi bi-pencil"></i></a>
+            <a class="btn btn-ghost btn-sm" href="{% url 'admin_invoice_create' %}?source=order_vector&pk={{ o.pk }}"><i class="bi bi-receipt"></i> Invoice</a>
+          </td></tr>
+        {% empty %}<tr><td colspan="7" class="empty">No vector orders</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- QUOTES -->
+  <div class="card {% if view != 'quotes' %}d-none{% endif %}">
+    <h2><i class="bi bi-file-earmark-text"></i> Digitizing Quotes</h2>
+    <table>
+      <thead><tr><th>#</th><th>Customer</th><th>Design</th><th>Status</th><th>Quoted Price</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for q in quotes_digitizing %}
+        <tr><td>{{ q.pk }}</td><td>{{ q.user.email }}</td><td>{{ q.design_name }}</td><td>{{ q.get_status_display }}</td>
+          <td>{{ q.quoted_price|default:"—" }}</td><td>{{ q.created_at|date:"Y-m-d" }}</td>
+          <td style="white-space:nowrap;"><a class="btn btn-ghost btn-sm" href="{% url 'admin_quote_edit' 'digitizing' q.pk %}"><i class="bi bi-pencil"></i></a> <a class="btn btn-ghost btn-sm" href="{% url 'admin_invoice_create' %}?source=quote_digitizing&pk={{ q.pk }}"><i class="bi bi-receipt"></i> Invoice</a></td></tr>
+        {% empty %}<tr><td colspan="7" class="empty">No digitizing quotes</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    <h2 style="margin-top:22px;"><i class="bi bi-file-earmark-text"></i> Patches Quotes</h2>
+    <table>
+      <thead><tr><th>#</th><th>Customer</th><th>Design</th><th>Status</th><th>Quoted Price</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for q in quotes_patches %}
+        <tr><td>{{ q.pk }}</td><td>{{ q.user.email }}</td><td>{{ q.design_name }}</td><td>{{ q.get_status_display }}</td>
+          <td>{{ q.quoted_price|default:"—" }}</td><td>{{ q.created_at|date:"Y-m-d" }}</td>
+          <td style="white-space:nowrap;"><a class="btn btn-ghost btn-sm" href="{% url 'admin_quote_edit' 'patches' q.pk %}"><i class="bi bi-pencil"></i></a> <a class="btn btn-ghost btn-sm" href="{% url 'admin_invoice_create' %}?source=quote_patches&pk={{ q.pk }}"><i class="bi bi-receipt"></i> Invoice</a></td></tr>
+        {% empty %}<tr><td colspan="7" class="empty">No patches quotes</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    <h2 style="margin-top:22px;"><i class="bi bi-file-earmark-text"></i> Vector Quotes</h2>
+    <table>
+      <thead><tr><th>#</th><th>Customer</th><th>Design</th><th>Status</th><th>Quoted Price</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for q in quotes_vector %}
+        <tr><td>{{ q.pk }}</td><td>{{ q.user.email }}</td><td>{{ q.design_name }}</td><td>{{ q.get_status_display }}</td>
+          <td>{{ q.quoted_price|default:"—" }}</td><td>{{ q.created_at|date:"Y-m-d" }}</td>
+          <td style="white-space:nowrap;"><a class="btn btn-ghost btn-sm" href="{% url 'admin_quote_edit' 'vector' q.pk %}"><i class="bi bi-pencil"></i></a> <a class="btn btn-ghost btn-sm" href="{% url 'admin_invoice_create' %}?source=quote_vector&pk={{ q.pk }}"><i class="bi bi-receipt"></i> Invoice</a></td></tr>
+        {% empty %}<tr><td colspan="7" class="empty">No vector quotes</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div><!-- /wrap -->
+
+<footer class="page-footer">
+  <div class="ft-inner">
+    <div class="ft-grid">
+      <div>
+        <div class="ft-brand">
+          <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitizing"/>
+        </div>
+        <p class="ft-desc">Professional embroidery digitizing studio delivering precise, high-quality designs for all garment types and formats worldwide.</p>
+        <div class="ft-socials">
+          <div class="ft-social" title="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div>
+          <div class="ft-social" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div class="ft-social" title="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+        </div>
+      </div>
+      <div>
+        <div class="ft-col-title">Records</div>
+        <div class="ft-links">
+          <a href="?view=invoices" class="ft-link">Invoices</a>
+          <a href="?view=orders" class="ft-link">Orders</a>
+          <a href="?view=quotes" class="ft-link">Quotes</a>
+        </div>
+      </div>
+      <div>
+        <div class="ft-col-title">Quick Links</div>
+        <div class="ft-links">
+          <a href="{% url 'dashboard' %}" class="ft-link">Dashboard</a>
+          <a href="{% url 'admin_invoice_create' %}" class="ft-link">New Invoice</a>
+          <a href="{% url 'index' %}" class="ft-link">Back to Site</a>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <p class="ft-copy">© 2026 RS Digitizing. Staff Admin Panel — Tiruppur, Tamil Nadu, India.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

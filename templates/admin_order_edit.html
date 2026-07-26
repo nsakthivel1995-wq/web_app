@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Order #{{ order.pk }} — RS Digitizing Staff Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --sky-100:#e0f2fe;--sky-200:#bae6fd;--sky-400:#38bdf8;--sky-500:#0ea5e9;--sky-600:#0284c7;
+      --blush:#fce7f3;--ink:#1a2340;--muted:#64748b;--ok:#16a34a;--warn:#d97706;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:'DM Sans',sans-serif;color:var(--ink);
+      background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 35%,#f8fbff 65%,#fce7f3 100%) fixed;
+      min-height:100vh;display:flex;flex-direction:column;
+    }
+    .wrap{max-width:640px;margin:0 auto;width:100%;padding:28px 20px 60px;flex:1;}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+    header img{height:42px;width:auto;flex-shrink:0;}
+    h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;line-height:1.2;}
+    h1 span{color:var(--sky-600);}
+    a.back{color:var(--muted);text-decoration:none;font-size:14px;display:block;margin-top:2px;}
+    a.back:hover{color:var(--sky-600);}
+
+    .card{background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border:1px solid rgba(186,230,253,.55);
+      border-radius:18px;padding:26px 28px;box-shadow:0 4px 24px rgba(14,165,233,.06);}
+    .card h2{font-size:15px;font-weight:600;margin-bottom:4px;}
+    .card .sub{color:var(--muted);font-size:13px;margin-bottom:20px;}
+
+    .msgs{margin-bottom:16px;}
+    .msg{padding:10px 14px;border-radius:10px;margin-bottom:8px;font-size:13.5px;}
+    .msg.success{background:rgba(22,163,74,.1);color:var(--ok);}
+    .msg.error{background:rgba(220,38,38,.1);color:#dc2626;}
+
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.03em;}
+    .field select, .field input[type=number], .field input[type=file]{
+      width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(186,230,253,.8);
+      font-family:inherit;font-size:14px;background:#fff;color:var(--ink);
+    }
+    .field .current-file{font-size:12.5px;color:var(--muted);margin-top:5px;}
+    .field .current-file a{color:var(--sky-600);text-decoration:none;}
+    .field .current-file a:hover{text-decoration:underline;}
+    .field .errs{color:#dc2626;font-size:12.5px;margin-top:5px;}
+
+    .order-meta{background:rgba(224,242,254,.4);border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:13.5px;}
+    .order-meta .row{display:flex;justify-content:space-between;padding:3px 0;}
+    .order-meta .lbl{color:var(--muted);}
+    .note-banner{background:rgba(217,119,6,.1);color:var(--warn);border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:18px;}
+    .field textarea{width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(186,230,253,.8);font-family:inherit;font-size:14px;background:#fff;color:var(--ink);resize:vertical;min-height:70px;}
+
+    .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}
+    .btn{display:inline-flex;align-items:center;gap:6px;background:var(--sky-500);color:#fff;border:none;
+      padding:10px 18px;border-radius:10px;font-size:13.5px;font-weight:500;cursor:pointer;text-decoration:none;transition:.2s;}
+    .btn:hover{background:var(--sky-600);}
+    .btn-ghost{background:rgba(56,189,248,.1);color:var(--sky-600);}
+    .btn-ghost:hover{background:rgba(56,189,248,.2);}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitize"/>
+    <div>
+      <h1>Edit <span>Order #{{ order.pk }}</span></h1>
+      <a href="{% url 'admin_dashboard' %}?view=orders" class="back"><i class="bi bi-arrow-left"></i> Back to orders</a>
+    </div>
+  </header>
+
+  {% if messages %}
+  <div class="msgs">
+    {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h2><i class="bi bi-box-seam"></i> {{ order.design_name }}</h2>
+    <div class="sub">{{ order_type|capfirst }} order — placed by {{ order.user.get_full_name|default:order.user.email }}</div>
+
+    <div class="order-meta">
+      <div class="row"><span class="lbl">Customer</span><span>{{ order.user.email }}</span></div>
+      <div class="row"><span class="lbl">PO Number</span><span>{{ order.po_number|default:"—" }}</span></div>
+      <div class="row"><span class="lbl">Date placed</span><span>{{ order.created_at|date:"Y-m-d" }}</span></div>
+      <div class="row"><span class="lbl">Current status</span><span>{{ order.get_status_display }}</span></div>
+      <div class="row"><span class="lbl">Current amount</span><span>{% if order.price %}Rs.{{ order.price }}{% else %}—{% endif %}</span></div>
+    </div>
+
+    {% if order.client_notes and order.status == 'correction_requested' %}
+    <div class="note-banner"><i class="bi bi-chat-left-text"></i> Correction requested: {{ order.client_notes }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="{{ form.status.id_for_label }}">Status</label>
+        {{ form.status }}
+        {% if form.status.errors %}<div class="errs">{{ form.status.errors|join:" " }}</div>{% endif %}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.price.id_for_label }}">Amount (Rs.)</label>
+        {{ form.price }}
+        {% if form.price.errors %}<div class="errs">{{ form.price.errors|join:" " }}</div>{% endif %}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.preview_file.id_for_label }}">Preview file (client-visible)</label>
+        {{ form.preview_file }}
+        {% if order.preview_file %}
+        <div class="current-file"><i class="bi bi-paperclip"></i> Current preview: <a href="{{ order.preview_file.url }}" target="_blank">{{ order.preview_file.name }}</a></div>
+        {% endif %}
+        {% if form.preview_file.errors %}<div class="errs">{{ form.preview_file.errors|join:" " }}</div>{% endif %}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.design_file.id_for_label }}">Final / original file (locked until payment)</label>
+        {{ form.design_file }}
+        {% if order.design_file %}
+        <div class="current-file"><i class="bi bi-paperclip"></i> Current file: <a href="{{ order.design_file.url }}" target="_blank">{{ order.design_file.name }}</a></div>
+        {% endif %}
+        {% if form.design_file.errors %}<div class="errs">{{ form.design_file.errors|join:" " }}</div>{% endif %}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.admin_notes.id_for_label }}">Notes to client</label>
+        {{ form.admin_notes }}
+        {% if form.admin_notes.errors %}<div class="errs">{{ form.admin_notes.errors|join:" " }}</div>{% endif %}
+      </div>
+
+      <div class="actions">
+        <a href="{% url 'admin_dashboard' %}?view=orders" class="btn btn-ghost"><i class="bi bi-x-lg"></i> Cancel</a>
+        <button type="submit" class="btn"><i class="bi bi-check2"></i> Save changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

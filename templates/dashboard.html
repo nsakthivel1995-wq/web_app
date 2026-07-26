@@ -1,0 +1,1662 @@
+{% load static %}
+<!--
+  ============================================================
+  RS Digitizing — Customer Dashboard
+  © 2026 RS Digitizing. All rights reserved.
+  Tiruppur, Tamil Nadu, India.
+  Unauthorized reproduction or redistribution of this page,
+  its design, content, or code is strictly prohibited.
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — RS Digitizing</title>
+  <meta name="description" content="RS Digitizing customer dashboard — manage your orders, quotes, and billing." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="author" content="RS Digitizing" />
+  <meta name="copyright" content="© 2026 RS Digitizing. All rights reserved." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky-100:#e0f2fe; --sky-200:#bae6fd; --sky-300:#7dd3fc;
+      --sky-400:#38bdf8; --sky-500:#0ea5e9; --sky-600:#0284c7;
+      --blush:#fce7f3;
+      --topbar-h:70px;
+      --sidebar-w:230px;
+      --sidebar-collapsed:62px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 35%,#f8fbff 65%,#fce7f3 100%) fixed;
+      color:#1a2340; overflow-x:hidden;
+    }
+
+    /* ── TOPBAR ── */
+    #topbar{
+      position:fixed;top:0;left:0;right:0;
+      height:var(--topbar-h);
+      background:rgba(255,255,255,0.85);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(186,230,253,0.55);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 20px 0 16px;z-index:1000;
+      box-shadow:0 2px 20px rgba(14,165,233,0.08);
+    }
+    .topbar-left{display:flex;align-items:center;gap:10px;}
+    #menuToggle{
+      background:none;border:none;cursor:pointer;
+      padding:8px;border-radius:10px;color:#64748b;
+      font-size:20px;transition:all .2s;flex-shrink:0;
+    }
+    #menuToggle:hover{background:rgba(56,189,248,0.1);color:var(--sky-600);}
+    .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .logo-img{height:46px;width:auto;filter:drop-shadow(0 2px 8px rgba(14,165,233,0.25));}
+    .logo-text{font-family:'Cormorant Garamond',serif;line-height:1.15;}
+    .logo-text .brand{
+      font-size:1.25rem;font-weight:600;letter-spacing:.04em;
+      background:linear-gradient(135deg,#0ea5e9,#0284c7,#7dd3fc);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .logo-text .sub{font-size:.6rem;font-weight:500;color:#94a3b8;letter-spacing:.18em;text-transform:uppercase;}
+    .topbar-right{display:flex;align-items:center;gap:8px;}
+    .welcome-chip{
+      font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+      color:#94a3b8;padding:4px 12px;background:rgba(240,249,255,.8);
+      border:1px solid rgba(186,230,253,.6);border-radius:50px;
+      white-space:nowrap;
+    }
+    .btn-top{
+      background:transparent;color:var(--sky-600);
+      border:1.5px solid rgba(14,165,233,.35);border-radius:50px;
+      padding:6px 14px;font-size:.75rem;font-family:'DM Sans',sans-serif;
+      font-weight:500;letter-spacing:.04em;cursor:pointer;transition:all .22s;
+      white-space:nowrap;
+    }
+    .btn-top:hover{
+      background:linear-gradient(135deg,#38bdf8,#0284c7);
+      color:#fff;border-color:transparent;
+      box-shadow:0 4px 14px rgba(14,165,233,.32);transform:translateY(-1px);
+    }
+    .btn-top i{margin-right:4px;}
+
+    /* ── LAYOUT WRAPPER ── */
+    #layout{display:flex;margin-top:var(--topbar-h);min-height:calc(100vh - var(--topbar-h));}
+
+    /* ── SIDEBAR ── */
+    #sidebar{
+      width:var(--sidebar-w);
+      background:rgba(255,255,255,.8);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-right:1px solid rgba(186,230,253,.5);
+      flex-shrink:0;position:fixed;
+      top:var(--topbar-h);left:0;bottom:0;
+      overflow-y:auto;overflow-x:hidden;
+      z-index:900;transition:width .28s cubic-bezier(.4,0,.2,1);
+    }
+    #sidebar.collapsed{width:var(--sidebar-collapsed);}
+    .sb-section{
+      padding:14px 0 4px 18px;
+      font-size:.62rem;font-weight:500;letter-spacing:.16em;
+      text-transform:uppercase;color:#94a3b8;transition:opacity .2s;
+    }
+    #sidebar.collapsed .sb-section{opacity:0;pointer-events:none;}
+    .nav-btn{
+      display:flex;align-items:center;gap:10px;
+      width:100%;padding:11px 18px;
+      background:none;border:none;
+      border-bottom:1px solid rgba(186,230,253,.22);
+      color:#64748b;font-family:'DM Sans',sans-serif;
+      font-size:.84rem;font-weight:400;
+      cursor:pointer;transition:all .18s;text-align:left;white-space:nowrap;
+      overflow:hidden;
+    }
+    .nav-btn i{font-size:16px;flex-shrink:0;color:var(--sky-500);transition:transform .2s;}
+    .nav-btn .lbl{transition:opacity .2s;}
+    #sidebar.collapsed .nav-btn .lbl{opacity:0;width:0;overflow:hidden;}
+    .nav-btn:hover{background:rgba(56,189,248,.07);color:var(--sky-600);}
+    .nav-btn:hover i{transform:scale(1.1);}
+    .nav-btn.active{
+      background:rgba(56,189,248,.1);color:var(--sky-600);
+      font-weight:500;border-left:3px solid var(--sky-400);
+    }
+
+    /* ── MAIN ── */
+    #main{
+      flex:1;margin-left:var(--sidebar-w);
+      display:flex;flex-direction:column;
+      min-height:100%;transition:margin-left .28s cubic-bezier(.4,0,.2,1);
+    }
+    #main.expanded{margin-left:var(--sidebar-collapsed);}
+    .main-content{flex:1;padding:28px 32px;}
+
+    /* ── PANEL ── */
+    .panel{
+      background:rgba(255,255,255,.76);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border:1px solid rgba(186,230,253,.5);
+      border-radius:24px;padding:32px 36px;
+      box-shadow:0 8px 40px rgba(14,165,233,.08),inset 0 1px 0 rgba(255,255,255,.9);
+      animation:panelIn .28s ease;
+    }
+    @keyframes panelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .panel-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.85rem;font-weight:600;font-style:italic;letter-spacing:.04em;
+      background:linear-gradient(135deg,#0ea5e9,#0284c7);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      text-align:center;margin-bottom:26px;
+    }
+    .d-none{display:none!important;}
+
+    /* ── DASHBOARD STAT CARDS ── */
+    .stats-row{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;
+    }
+    .stat-card{
+      background:rgba(255,255,255,.8);
+      border:1px solid rgba(186,230,253,.5);border-radius:18px;
+      padding:18px 20px;display:flex;align-items:center;gap:14px;
+      box-shadow:0 2px 12px rgba(14,165,233,.06);
+    }
+    .stat-icon{
+      width:46px;height:46px;border-radius:14px;
+      background:linear-gradient(135deg,var(--sky-100),var(--sky-200));
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .stat-icon i{font-size:20px;color:var(--sky-600);}
+    .stat-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--sky-600);line-height:1;}
+    .stat-lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-top:2px;}
+
+    /* ── DASH GRID CARDS ── */
+    .dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:750px;margin:0 auto;}
+    .dash-card{
+      background:rgba(255,255,255,.8);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(186,230,253,.45);border-radius:20px;
+      display:flex;flex-direction:column;align-items:center;
+      padding:26px 14px 16px;gap:13px;cursor:pointer;
+      transition:all .32s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;
+    }
+    .dash-card::before{
+      content:'';position:absolute;top:-50%;left:-50%;
+      width:200%;height:200%;
+      background:radial-gradient(ellipse at center,rgba(56,189,248,.08),transparent 70%);
+      opacity:0;transition:opacity .35s;
+    }
+    .dash-card:hover::before{opacity:1;}
+    .dash-card:hover{
+      transform:translateY(-6px) scale(1.01);
+      border-color:rgba(56,189,248,.5);
+      box-shadow:0 16px 48px rgba(14,165,233,.14),inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .dash-icon{
+      width:60px;height:54px;border-radius:16px;
+      background:linear-gradient(135deg,var(--sky-100),var(--sky-200));
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .25s;
+    }
+    .dash-card:hover .dash-icon{transform:scale(1.1) rotate(4deg);}
+    .dash-icon i{font-size:24px;color:var(--sky-600);}
+    .dash-lbl{
+      width:100%;background:linear-gradient(135deg,#38bdf8,#0284c7);
+      color:#fff;font-size:.74rem;font-weight:500;letter-spacing:.06em;
+      text-align:center;padding:6px 10px;border-radius:50px;text-transform:uppercase;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-row{
+      display:flex;align-items:stretch;
+      border-radius:14px;overflow:hidden;
+      border:1.5px solid rgba(186,230,253,.7);
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .field-row:focus-within{
+      border-color:var(--sky-400);
+      box-shadow:0 0 0 3px rgba(56,189,248,.12);
+    }
+    .field-lbl{
+      background:rgba(240,249,255,.85);color:#64748b;
+      font-size:.75rem;font-weight:500;letter-spacing:.04em;
+      padding:10px 14px;min-width:130px;
+      display:flex;align-items:center;
+      border-right:1.5px solid rgba(186,230,253,.7);white-space:nowrap;
+    }
+    .field-inp{
+      flex:1;border:none;outline:none;padding:10px 14px;
+      font-size:.88rem;font-family:'DM Sans',sans-serif;
+      background:rgba(255,255,255,.75);color:#1a2340;
+    }
+    .field-inp:focus{background:rgba(255,255,255,.96);}
+    .field-inp::placeholder{color:#94a3b8;}
+    .field-ta{
+      flex:1;border:none;outline:none;padding:10px 14px;
+      font-size:.88rem;font-family:'DM Sans',sans-serif;
+      background:rgba(255,255,255,.75);resize:vertical;min-height:80px;color:#1a2340;
+    }
+    select.field-inp option{background:#fff;color:#1a2340;}
+
+    .btn-accent{
+      background:linear-gradient(135deg,#38bdf8,#0284c7);
+      color:#fff;border:none;border-radius:50px;
+      padding:10px 30px;font-size:.84rem;
+      font-family:'DM Sans',sans-serif;font-weight:500;letter-spacing:.05em;
+      cursor:pointer;transition:all .25s;
+      box-shadow:0 4px 18px rgba(14,165,233,.32);
+      position:relative;overflow:hidden;
+    }
+    .btn-accent::before{
+      content:'';position:absolute;top:50%;left:50%;
+      width:0;height:0;background:rgba(255,255,255,.22);
+      border-radius:50%;transform:translate(-50%,-50%);
+      transition:width .5s,height .5s;
+    }
+    .btn-accent:hover::before{width:300px;height:300px;}
+    .btn-accent:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(14,165,233,.42);}
+
+    /* ── TABLES ── */
+    .tbl-hdr{
+      background:linear-gradient(135deg,#38bdf8,#0284c7);
+      color:#fff;padding:12px 20px;
+      border-radius:14px 14px 0 0;
+      font-size:.85rem;font-weight:500;letter-spacing:.05em;
+    }
+    .tbl-wrap{
+      background:rgba(255,255,255,.85);border-radius:0 0 14px 14px;
+      overflow:hidden;border:1px solid rgba(186,230,253,.5);border-top:none;
+      overflow-x:auto;
+    }
+    table.rec{width:100%;border-collapse:collapse;font-size:.82rem;min-width:560px;}
+    table.rec thead th{
+      background:rgba(240,249,255,.9);padding:10px 16px;
+      text-align:left;color:#475569;font-weight:500;letter-spacing:.04em;
+      border-bottom:1px solid rgba(186,230,253,.5);
+    }
+    table.rec tbody td{
+      padding:10px 16px;color:#334155;
+      border-bottom:1px solid rgba(186,230,253,.22);
+    }
+    table.rec tbody tr:last-child td{border-bottom:none;}
+    table.rec tbody tr:hover td{background:rgba(56,189,248,.04);}
+    .badge-ok {background:#d1fae5;color:#065f46;border-radius:20px;padding:3px 11px;font-size:.7rem;font-weight:600;}
+    .btn-edit-row{background:#eef2ff;color:#4338ca;border:none;border-radius:8px;padding:5px 12px;font-size:.74rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .btn-edit-row:hover{background:#c7d2fe;}
+    .files-cell{white-space:nowrap;}
+    .file-link{color:#4338ca;text-decoration:none;margin-right:6px;font-size:.78rem;}
+    .file-link:hover{text-decoration:underline;}
+    .form-error-banner{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.82rem;font-family:'DM Sans',sans-serif;line-height:1.6;}
+    .badge-pend{background:#fef9c3;color:#854d0e;border-radius:20px;padding:3px 11px;font-size:.7rem;font-weight:600;}
+    .badge-new {background:var(--sky-100);color:var(--sky-600);border-radius:20px;padding:3px 11px;font-size:.7rem;font-weight:600;}
+    .badge-warn{background:#ffedd5;color:#9a3412;border-radius:20px;padding:3px 11px;font-size:.7rem;font-weight:600;}
+    .badge-rej {background:#fee2e2;color:#991b1b;border-radius:20px;padding:3px 11px;font-size:.7rem;font-weight:600;}
+    .wf-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+    .wf-actions form{display:inline-flex;gap:4px;align-items:center;margin:0;}
+    .wf-actions input[type=text],.wf-actions select{border:1px solid rgba(186,230,253,.8);border-radius:8px;padding:5px 8px;font-size:12px;font-family:inherit;}
+    .wf-btn{border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+    .wf-btn-ok{background:#d1fae5;color:#065f46;}
+    .wf-btn-warn{background:#ffedd5;color:#9a3412;}
+    .wf-btn-rej{background:#fee2e2;color:#991b1b;}
+    .wf-btn-pay{background:var(--sky-500);color:#fff;}
+    .wf-locked{color:var(--muted);font-size:12px;}
+    .empty-row td{text-align:center;color:#94a3b8;padding:38px;font-size:.84rem;}
+    .tbl-btn{
+      background:rgba(224,242,254,.8);color:var(--sky-600);
+      border:1px solid rgba(186,230,253,.7);border-radius:20px;
+      padding:3px 11px;font-size:.7rem;font-weight:500;cursor:pointer;transition:all .18s;
+    }
+    .tbl-btn:hover{background:var(--sky-100);border-color:var(--sky-400);}
+
+    /* ── BILLING TABS ── */
+    .btabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap;}
+    .btab{
+      background:rgba(255,255,255,.75);color:#64748b;
+      border:1.5px solid rgba(186,230,253,.6);border-radius:50px;
+      padding:7px 18px;font-size:.78rem;font-family:'DM Sans',sans-serif;font-weight:500;
+      cursor:pointer;transition:all .2s;
+    }
+    .btab:hover{background:rgba(56,189,248,.08);border-color:var(--sky-400);color:var(--sky-600);}
+    .btab.active{
+      background:linear-gradient(135deg,#38bdf8,#0284c7);
+      color:#fff;border-color:transparent;
+      box-shadow:0 4px 14px rgba(14,165,233,.28);
+    }
+
+    /* ── FOOTER (inside main, after content) ── */
+    .page-footer{
+      background:linear-gradient(135deg,#0f172a,#1e293b);
+      padding:3.5rem 2rem 1.8rem;margin-top:auto;
+    }
+    .page-footer .ft-inner{max-width:900px;margin:0 auto;}
+    .ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;margin-bottom:2.5rem;}
+    .ft-brand{display:flex;align-items:center;gap:10px;margin-bottom:.9rem;}
+    .ft-brand img{height:42px;width:auto;filter:drop-shadow(0 0 6px rgba(56,189,248,.3));}
+    .ft-brand-name{
+      font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;
+      background:linear-gradient(135deg,#7dd3fc,#38bdf8);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .ft-desc{color:#64748b;line-height:1.82;font-size:.84rem;max-width:260px;}
+    .ft-socials{display:flex;gap:.6rem;margin-top:1.2rem;}
+    .ft-social{
+      width:34px;height:34px;background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);border-radius:9px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.95rem;cursor:pointer;transition:all .25s;
+    }
+    .ft-social:hover{background:rgba(56,189,248,.15);}
+    .ft-col-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:.9rem;font-weight:500;}
+    .ft-links{display:flex;flex-direction:column;gap:.55rem;}
+    .ft-link{color:#64748b;font-size:.85rem;text-decoration:none;transition:color .22s;}
+    .ft-link:hover{color:#38bdf8;}
+    .ft-link.highlight{color:#38bdf8;}
+    .ft-bottom{
+      border-top:1px solid rgba(255,255,255,.06);
+      padding-top:1.6rem;display:flex;justify-content:space-between;
+      align-items:center;flex-wrap:wrap;gap:.8rem;
+    }
+    .ft-copy{color:#475569;font-size:.78rem;}
+
+    /* ── TABBED FORMS (Place Order / Place Quote) ── */
+    .panel-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:2rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+      color:#64748b;text-align:center;margin-bottom:18px;
+      -webkit-text-fill-color:unset;background:none;
+    }
+    .form-tabs{
+      display:flex;border-bottom:2px solid #d1d5db;
+      margin-bottom:20px;gap:0;
+    }
+    .form-tab{
+      padding:10px 22px;font-size:.88rem;font-family:'DM Sans',sans-serif;
+      font-weight:500;border:1.5px solid #d1d5db;border-bottom:none;
+      background:#7a97aa;color:#fff;cursor:pointer;transition:all .2s;
+      margin-right:-1px;border-radius:4px 4px 0 0;
+    }
+    .form-tab.active{
+      background:#fff;color:#1a2340;border-color:#d1d5db;
+      position:relative;bottom:-2px;z-index:1;
+    }
+    .form-tab:not(.active):hover{background:#6b8899;}
+    .tab-form{animation:panelIn .2s ease;}
+    .form-grid-2{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;
+    }
+    .plain-inp{
+      width:100%;padding:10px 14px;
+      border:1.5px solid #d1d5db;border-radius:6px;
+      font-size:.87rem;font-family:'DM Sans',sans-serif;
+      background:#fff;color:#1a2340;outline:none;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .plain-inp:focus{border-color:var(--sky-400);box-shadow:0 0 0 3px rgba(56,189,248,.1);}
+    .plain-inp::placeholder{color:#94a3b8;}
+    .plain-ta{
+      width:100%;padding:10px 14px;
+      border:1.5px solid #d1d5db;border-radius:6px;
+      font-size:.87rem;font-family:'DM Sans',sans-serif;
+      background:#fff;color:#1a2340;outline:none;resize:vertical;
+      min-height:90px;transition:border-color .2s;
+    }
+    .plain-ta:focus{border-color:var(--sky-400);box-shadow:0 0 0 3px rgba(56,189,248,.1);}
+    .plain-ta::placeholder{color:#94a3b8;}
+    .form-grid-instr{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;
+    }
+    .file-col{display:flex;flex-direction:column;gap:8px;}
+    .file-inp{cursor:pointer;padding:7px 10px;font-size:.82rem;}
+    .file-row{display:flex;align-items:center;gap:6px;}
+    .file-row .file-inp{flex:1;}
+    .btn-add-file{flex-shrink:0;width:30px;height:30px;border-radius:8px;border:none;background:var(--sky-500,#0ea5e9);color:#fff;font-size:1.2rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .18s;}
+    .btn-add-file:hover{background:var(--sky-600,#0284c7);}
+    .form-footer{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+    .date-wrap{display:flex;align-items:center;gap:6px;}
+    .date-wrap .plain-inp{padding:7px 10px;font-size:.82rem;}
+    .dim-wrap{display:flex;gap:4px;align-items:stretch;}
+    .dim-inp{flex:1;min-width:0;}
+    .dim-unit{width:58px;padding:8px 4px;font-size:.82rem;cursor:pointer;flex-shrink:0;}
+    .form-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:10px;
+    }
+    .urgent-wrap{
+      display:flex;align-items:center;gap:7px;cursor:pointer;
+    }
+    .urgent-wrap input[type=checkbox]{
+      width:18px;height:18px;cursor:pointer;border:2px solid #d1d5db;
+      accent-color:var(--sky-500);border-radius:3px;
+    }
+    .urgent-lbl{color:#dc2626;font-size:.84rem;font-weight:500;}
+    .btn-submit{
+      background:#dc2626;color:#fff;border:none;border-radius:6px;
+      padding:11px 28px;font-size:.88rem;
+      font-family:'DM Sans',sans-serif;font-weight:600;letter-spacing:.04em;
+      cursor:pointer;transition:all .22s;
+      box-shadow:0 3px 12px rgba(220,38,38,.25);
+    }
+    .btn-submit:hover{background:#b91c1c;transform:translateY(-1px);box-shadow:0 5px 16px rgba(220,38,38,.35);}
+    .note-txt{color:#dc2626;font-size:.8rem;font-weight:500;margin-top:8px;}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .stats-row{grid-template-columns:repeat(2,1fr);}
+      .dash-grid{grid-template-columns:repeat(2,1fr);}
+      .ft-grid{grid-template-columns:1fr 1fr;}
+    }
+    @media(max-width:640px){
+      #sidebar{width:var(--sidebar-collapsed);}
+      #sidebar .lbl,#sidebar .sb-section{display:none;}
+      #main{margin-left:var(--sidebar-collapsed)!important;}
+      .topbar-right .welcome-chip{display:none;}
+      .main-content{padding:16px 14px;}
+      .panel{padding:20px 16px;}
+      .stats-row{grid-template-columns:1fr 1fr;}
+      .dash-grid{grid-template-columns:repeat(2,1fr);}
+      .ft-grid{grid-template-columns:1fr;}
+      .btn-top span{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header id="topbar">
+  <div class="topbar-left">
+    <button id="menuToggle" onclick="toggleSidebar()" title="Toggle menu">
+      <i class="bi bi-list"></i>
+    </button>
+    <a class="logo-wrap" href="#" onclick="showView('dashboard')">
+      <img class="logo-img" src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitizing"/>
+    </a>
+  </div>
+  <div class="topbar-right">
+    <span class="welcome-chip" style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Welcome, {{ user.get_full_name|default:user.username }}</span>
+    <button class="btn-top" onclick="showView('placeorder')"><i class="bi bi-plus-circle"></i><span>New Order</span></button>
+    <button class="btn-top" onclick="showView('profile')"><i class="bi bi-person"></i><span>Profile</span></button>
+    <button class="btn-top" onclick="window.location.href='{% url 'logout' %}'"><i class="bi bi-box-arrow-right"></i><span>Logout</span></button>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sb-section">Main</div>
+    <button class="nav-btn active" id="nav-dashboard" onclick="showView('dashboard')">
+      <i class="bi bi-speedometer2"></i><span class="lbl">Dashboard</span>
+    </button>
+
+    <div class="sb-section">Records</div>
+    <button class="nav-btn" id="nav-orders" onclick="showView('orders')">
+      <i class="bi bi-folder2-open"></i><span class="lbl">Order Records</span>
+    </button>
+    <button class="nav-btn" id="nav-quotes" onclick="showView('quotes')">
+      <i class="bi bi-folder2"></i><span class="lbl">Quote Records</span>
+    </button>
+
+    <div class="sb-section">Submit</div>
+    <button class="nav-btn" id="nav-placeorder" onclick="showView('placeorder')">
+      <i class="bi bi-plus-circle"></i><span class="lbl">Place Order</span>
+    </button>
+    <button class="nav-btn" id="nav-placequote" onclick="showView('placequote')">
+      <i class="bi bi-plus-square"></i><span class="lbl">Place Quote</span>
+    </button>
+
+    <div class="sb-section">Account</div>
+    <button class="nav-btn" id="nav-billing" onclick="showView('billing')">
+      <i class="bi bi-cash-coin"></i><span class="lbl">Billing</span>
+    </button>
+    <button class="nav-btn" id="nav-downloads" onclick="showView('downloads')">
+      <i class="bi bi-download"></i><span class="lbl">Downloads</span>
+    </button>
+    <button class="nav-btn" id="nav-uploads" onclick="showView('uploads')">
+      <i class="bi bi-cloud-upload"></i><span class="lbl">Uploads</span>
+    </button>
+    {% if user.is_staff %}
+    <a class="nav-btn" href="{% url 'admin_dashboard' %}">
+      <i class="bi bi-shield-lock"></i><span class="lbl">Staff Admin</span>
+    </a>
+    {% endif %}
+    <button class="nav-btn" id="nav-profile" onclick="showView('profile')">
+      <i class="bi bi-person-circle"></i><span class="lbl">Profile</span>
+    </button>
+    <button class="nav-btn" onclick="window.location.href='{% url 'logout' %}'">
+      <i class="bi bi-box-arrow-right"></i><span class="lbl">Logout</span>
+    </button>
+    <button class="nav-btn" onclick="window.location.href="{% url 'index' %}"">
+      <i class="bi bi-house"></i><span class="lbl">Back to Site</span>
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <div id="main">
+    <div class="main-content">
+
+      <!-- DASHBOARD VIEW -->
+      <div class="panel" id="view-dashboard">
+        <div class="panel-title"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;opacity:0.7;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg> Dashboard</div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-folder2-open"></i></div>
+            <div><div class="stat-num">{{ stats.total_orders }}</div><div class="stat-lbl">Total Orders</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-folder2"></i></div>
+            <div><div class="stat-num">{{ stats.total_quotes }}</div><div class="stat-lbl">Quotes</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+            <div><div class="stat-num">{{ stats.active_orders }}</div><div class="stat-lbl">Active Orders</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-cash-coin"></i></div>
+            <div><div class="stat-num">{{ stats.unpaid_invoices }}</div><div class="stat-lbl">Unpaid Bills</div></div>
+          </div>
+        </div>
+
+        <!-- Quick nav cards -->
+        <div class="dash-grid">
+          <div class="dash-card" onclick="showView('orders')">
+            <div class="dash-icon"><i class="bi bi-folder2-open"></i></div>
+            <div class="dash-lbl">Order Records</div>
+          </div>
+          <div class="dash-card" onclick="showView('quotes')">
+            <div class="dash-icon"><i class="bi bi-folder2"></i></div>
+            <div class="dash-lbl">Quote Records</div>
+          </div>
+          <div class="dash-card" onclick="showView('billing')">
+            <div class="dash-icon"><i class="bi bi-cash-coin"></i></div>
+            <div class="dash-lbl">Billing</div>
+          </div>
+          <div class="dash-card" onclick="showView('downloads')">
+            <div class="dash-icon"><i class="bi bi-download"></i></div>
+            <div class="dash-lbl">Downloads {% if stats.downloads_ready %}({{ stats.downloads_ready }}){% endif %}</div>
+          </div>
+          <div class="dash-card" onclick="showView('uploads')">
+            <div class="dash-icon"><i class="bi bi-cloud-upload"></i></div>
+            <div class="dash-lbl">Uploads {% if all_uploads %}({{ all_uploads|length }}){% endif %}</div>
+          </div>
+          <div class="dash-card" onclick="showView('placeorder')">
+            <div class="dash-icon"><i class="bi bi-plus-circle-dotted"></i></div>
+            <div class="dash-lbl">Place Order</div>
+          </div>
+          <div class="dash-card" onclick="showView('placequote')">
+            <div class="dash-icon"><i class="bi bi-plus-square-dotted"></i></div>
+            <div class="dash-lbl">Place Quote</div>
+          </div>
+          <div class="dash-card" onclick="showView('profile')">
+            <div class="dash-icon"><i class="bi bi-person-circle"></i></div>
+            <div class="dash-lbl">My Profile</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER RECORDS -->
+      <div class="panel d-none" id="view-orders">
+        <div class="panel-title"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;opacity:0.7;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg> Order Records</div>
+        <div class="tbl-hdr"><i class="bi bi-folder2-open me-2"></i>All Orders</div>
+        <div class="tbl-wrap">
+          <table class="rec">
+            <thead><tr><th>S.No</th><th>Order ID</th><th>Type</th><th>Design Name</th><th>Date</th><th>Size</th><th>Amount</th><th>Status</th><th>Files</th><th>Action</th></tr></thead>
+            <tbody>
+              {% for order in orders_digitizing %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>ORD{{ order.pk }}</td>
+                <td>Digitizing</td>
+                <td>{{ order.design_name }}</td>
+                <td>{{ order.created_at|date:"Y-m-d" }}</td>
+                <td>{% if order.width_mm and order.height_mm %}{{ order.width_mm }} × {{ order.height_mm }} {{ order.size_unit|default:"in" }}{% else %}—{% endif %}</td>
+                <td>{% if order.price %}Rs.{{ order.price }}{% else %}—{% endif %}</td>
+                <td><span class="{{ order.status_badge_class }}">{{ order.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if order.design_file %}<a href="{{ order.design_file.url }}" target="_blank" title="Download design file" class="file-link"><i class="bi bi-paperclip"></i></a>{% endif %}
+                  {% for ef in order.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% if not order.design_file and not order.extra_files %}—{% endif %}
+                </td>
+                <td>
+                  <div class="wf-actions">
+                  {% if order.client_can_request_correction %}
+                  <form method="post" action="{% url 'client_order_action' 'digitizing' order.pk 'approve' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-ok" onclick="return confirm('Approve this design and proceed to payment?')">Approve</button></form>
+                  <form method="post" action="{% url 'client_order_action' 'digitizing' order.pk 'request_correction' %}" onsubmit="var c=prompt('Describe the correction needed:'); if(!c){ return false; } this.querySelector('[name=comment]').value=c;">{% csrf_token %}<input type="hidden" name="comment" value=""><button type="submit" class="wf-btn wf-btn-warn">Request Correction</button></form>
+                  {% endif %}
+                  {% if order.client_can_pay %}
+                  <form method="post" action="{% url 'client_order_action' 'digitizing' order.pk 'pay' %}">{% csrf_token %}
+                    <select name="payment_method" required>
+                      <option value="">Pay via…</option>
+                      <option value="razorpay">Razorpay</option>
+                      <option value="stripe">Stripe</option>
+                      <option value="paypal">PayPal</option>
+                      <option value="upi">UPI</option>
+                    </select>
+                    <button type="submit" class="wf-btn wf-btn-pay">Pay Now</button>
+                  </form>
+                  {% endif %}
+                  </div>
+                  <button type="button" class="btn-edit-row" onclick='editOrderRow("digitizing", {{ order.pk }}, {
+                  design_name: "{{ order.design_name|default:""|escapejs }}",
+                  po_number: "{{ order.po_number|default:""|escapejs }}",
+                  width_mm: "{{ order.width_mm|default:""|escapejs }}",
+                  height_mm: "{{ order.height_mm|default:""|escapejs }}",
+                  size_unit: "{{ order.size_unit|default:"in"|escapejs }}",
+                  colors: "{{ order.colors|default:""|escapejs }}",
+                  format: "{{ order.format|default:""|escapejs }}",
+                  fabric: "{{ order.fabric|default:""|escapejs }}",
+                  placement: "{{ order.placement|default:""|escapejs }}",
+                  instructions: "{{ order.instructions|default:""|escapejs }}",
+                  urgent: {% if order.urgent %}true{% else %}false{% endif %},
+                  date_needed: "{{ order.date_needed|date:"Y-m-d"|default:"" }}",
+                  price: "{{ order.price|default:""|escapejs }}",
+                  status: "{{ order.status|default:"new"|escapejs }}"
+                })'>Edit</button></td>
+              </tr>
+              {% endfor %}
+              {% for order in orders_patches %}
+              <tr>
+                <td></td>
+                <td>ORD{{ order.pk }}</td>
+                <td>Patches</td>
+                <td>{{ order.design_name }}</td>
+                <td>{{ order.created_at|date:"Y-m-d" }}</td>
+                <td>{% if order.width_mm and order.height_mm %}{{ order.width_mm }} × {{ order.height_mm }} {{ order.size_unit|default:"in" }}{% else %}—{% endif %}</td>
+                <td>{% if order.price %}Rs.{{ order.price }}{% else %}—{% endif %}</td>
+                <td><span class="{{ order.status_badge_class }}">{{ order.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if order.design_file %}<a href="{{ order.design_file.url }}" target="_blank" title="Download design file" class="file-link"><i class="bi bi-paperclip"></i></a>{% endif %}
+                  {% for ef in order.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% if not order.design_file and not order.extra_files %}—{% endif %}
+                </td>
+                <td>
+                  <div class="wf-actions">
+                  {% if order.client_can_request_correction %}
+                  <form method="post" action="{% url 'client_order_action' 'patches' order.pk 'approve' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-ok" onclick="return confirm('Approve this design and proceed to payment?')">Approve</button></form>
+                  <form method="post" action="{% url 'client_order_action' 'patches' order.pk 'request_correction' %}" onsubmit="var c=prompt('Describe the correction needed:'); if(!c){ return false; } this.querySelector('[name=comment]').value=c;">{% csrf_token %}<input type="hidden" name="comment" value=""><button type="submit" class="wf-btn wf-btn-warn">Request Correction</button></form>
+                  {% endif %}
+                  {% if order.client_can_pay %}
+                  <form method="post" action="{% url 'client_order_action' 'patches' order.pk 'pay' %}">{% csrf_token %}
+                    <select name="payment_method" required>
+                      <option value="">Pay via…</option>
+                      <option value="razorpay">Razorpay</option>
+                      <option value="stripe">Stripe</option>
+                      <option value="paypal">PayPal</option>
+                      <option value="upi">UPI</option>
+                    </select>
+                    <button type="submit" class="wf-btn wf-btn-pay">Pay Now</button>
+                  </form>
+                  {% endif %}
+                  </div>
+                  <button type="button" class="btn-edit-row" onclick='editOrderRow("patches", {{ order.pk }}, {
+                  design_name: "{{ order.design_name|default:""|escapejs }}",
+                  po_number: "{{ order.po_number|default:""|escapejs }}",
+                  width_mm: "{{ order.width_mm|default:""|escapejs }}",
+                  height_mm: "{{ order.height_mm|default:""|escapejs }}",
+                  size_unit: "{{ order.size_unit|default:"in"|escapejs }}",
+                  colors: "{{ order.colors|default:""|escapejs }}",
+                  patch_type: "{{ order.patch_type|default:""|escapejs }}",
+                  backing: "{{ order.backing|default:""|escapejs }}",
+                  quantity: "{{ order.quantity|default:""|escapejs }}",
+                  embroidery_pct: "{{ order.embroidery_pct|default:""|escapejs }}",
+                  thread_color: "{{ order.thread_color|default:""|escapejs }}",
+                  instructions: "{{ order.instructions|default:""|escapejs }}",
+                  urgent: {% if order.urgent %}true{% else %}false{% endif %},
+                  date_needed: "{{ order.date_needed|date:"Y-m-d"|default:"" }}",
+                  price: "{{ order.price|default:""|escapejs }}",
+                  status: "{{ order.status|default:"new"|escapejs }}"
+                })'>Edit</button></td>
+              </tr>
+              {% endfor %}
+              {% for order in orders_vector %}
+              <tr>
+                <td></td>
+                <td>ORD{{ order.pk }}</td>
+                <td>Vector</td>
+                <td>{{ order.design_name }}</td>
+                <td>{{ order.created_at|date:"Y-m-d" }}</td>
+                <td>—</td>
+                <td>{% if order.price %}Rs.{{ order.price }}{% else %}—{% endif %}</td>
+                <td><span class="{{ order.status_badge_class }}">{{ order.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if order.design_file %}<a href="{{ order.design_file.url }}" target="_blank" title="Download design file" class="file-link"><i class="bi bi-paperclip"></i></a>{% endif %}
+                  {% for ef in order.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% if not order.design_file and not order.extra_files %}—{% endif %}
+                </td>
+                <td>
+                  <div class="wf-actions">
+                  {% if order.client_can_request_correction %}
+                  <form method="post" action="{% url 'client_order_action' 'vector' order.pk 'approve' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-ok" onclick="return confirm('Approve this design and proceed to payment?')">Approve</button></form>
+                  <form method="post" action="{% url 'client_order_action' 'vector' order.pk 'request_correction' %}" onsubmit="var c=prompt('Describe the correction needed:'); if(!c){ return false; } this.querySelector('[name=comment]').value=c;">{% csrf_token %}<input type="hidden" name="comment" value=""><button type="submit" class="wf-btn wf-btn-warn">Request Correction</button></form>
+                  {% endif %}
+                  {% if order.client_can_pay %}
+                  <form method="post" action="{% url 'client_order_action' 'vector' order.pk 'pay' %}">{% csrf_token %}
+                    <select name="payment_method" required>
+                      <option value="">Pay via…</option>
+                      <option value="razorpay">Razorpay</option>
+                      <option value="stripe">Stripe</option>
+                      <option value="paypal">PayPal</option>
+                      <option value="upi">UPI</option>
+                    </select>
+                    <button type="submit" class="wf-btn wf-btn-pay">Pay Now</button>
+                  </form>
+                  {% endif %}
+                  </div>
+                  <button type="button" class="btn-edit-row" onclick='editOrderRow("vector", {{ order.pk }}, {
+                  design_name: "{{ order.design_name|default:""|escapejs }}",
+                  po_number: "{{ order.po_number|default:""|escapejs }}",
+                  vector_format: "{{ order.vector_format|default:""|escapejs }}",
+                  background: "{{ order.background|default:""|escapejs }}",
+                  colors: "{{ order.colors|default:""|escapejs }}",
+                  instructions: "{{ order.instructions|default:""|escapejs }}",
+                  urgent: {% if order.urgent %}true{% else %}false{% endif %},
+                  date_needed: "{{ order.date_needed|date:"Y-m-d"|default:"" }}",
+                  price: "{{ order.price|default:""|escapejs }}",
+                  status: "{{ order.status|default:"new"|escapejs }}"
+                })'>Edit</button></td>
+              </tr>
+              {% endfor %}
+              {% if not orders_digitizing and not orders_patches and not orders_vector %}
+              <tr class="empty-row"><td colspan="10"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No orders yet</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- QUOTE RECORDS -->
+      <div class="panel d-none" id="view-quotes">
+        <div class="panel-title"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;opacity:0.7;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg> Quote Records</div>
+        <div class="tbl-hdr"><i class="bi bi-folder2 me-2"></i>All Quotes</div>
+        <div class="tbl-wrap">
+          <table class="rec">
+            <thead><tr><th>S.No</th><th>Quote ID</th><th>Type</th><th>Design Name</th><th>Date</th><th>Size</th><th>Amount</th><th>Status</th><th>Files</th><th>Action</th></tr></thead>
+            <tbody>
+              {% for quote in quotes_digitizing %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>QT{{ quote.pk }}</td>
+                <td>Digitizing</td>
+                <td>{{ quote.design_name }}</td>
+                <td>{{ quote.created_at|date:"Y-m-d" }}</td>
+                <td>{% if quote.width_mm and quote.height_mm %}{{ quote.width_mm }} × {{ quote.height_mm }} {{ quote.size_unit|default:"in" }}{% else %}—{% endif %}</td>
+                <td>{% if quote.quoted_price %}Rs.{{ quote.quoted_price }}{% else %}—{% endif %}</td>
+                <td><span class="{{ quote.status_badge_class }}">{{ quote.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if quote.design_file %}<a href="{{ quote.design_file.url }}" target="_blank" title="Download design file" class="file-link"><i class="bi bi-paperclip"></i></a>{% endif %}
+                  {% for ef in quote.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% if not quote.design_file and not quote.extra_files %}—{% endif %}
+                </td>
+<td>
+                  <div class="wf-actions">
+                  {% if quote.client_can_respond_to_quote %}
+                  <form method="post" action="{% url 'client_quote_action' 'digitizing' quote.pk 'accept' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-ok" onclick="return confirm('Accept this quotation and create an order?')">Accept</button></form>
+                  <form method="post" action="{% url 'client_quote_action' 'digitizing' quote.pk 'reject' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-rej" onclick="return confirm('Reject this quotation?')">Reject</button></form>
+                  {% endif %}
+                  </div>
+                  <button type="button" class="btn-edit-row" onclick='editQuoteRow("digitizing", {{ quote.pk }}, {
+                  design_name: "{{ quote.design_name|default:""|escapejs }}",
+                  po_number: "{{ quote.po_number|default:""|escapejs }}",
+                  width_mm: "{{ quote.width_mm|default:""|escapejs }}",
+                  height_mm: "{{ quote.height_mm|default:""|escapejs }}",
+                  size_unit: "{{ quote.size_unit|default:"in"|escapejs }}",
+                  colors: "{{ quote.colors|default:""|escapejs }}",
+                  fabric: "{{ quote.fabric|default:""|escapejs }}",
+                  placement: "{{ quote.placement|default:""|escapejs }}",
+                  description: "{{ quote.description|default:""|escapejs }}",
+                  urgent: {% if quote.urgent %}true{% else %}false{% endif %},
+                  date_needed: "{{ quote.date_needed|date:"Y-m-d"|default:"" }}"
+                })'>Edit</button></td>
+              </tr>
+              {% endfor %}
+              {% for quote in quotes_patches %}
+              <tr>
+                <td></td>
+                <td>QT{{ quote.pk }}</td>
+                <td>Patches</td>
+                <td>{{ quote.design_name }}</td>
+                <td>{{ quote.created_at|date:"Y-m-d" }}</td>
+                <td>{% if quote.width_mm and quote.height_mm %}{{ quote.width_mm }} × {{ quote.height_mm }} {{ quote.size_unit|default:"in" }}{% else %}—{% endif %}</td>
+                <td>{% if quote.quoted_price %}Rs.{{ quote.quoted_price }}{% else %}—{% endif %}</td>
+                <td><span class="{{ quote.status_badge_class }}">{{ quote.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if quote.design_file %}<a href="{{ quote.design_file.url }}" target="_blank" title="Download design file" class="file-link"><i class="bi bi-paperclip"></i></a>{% endif %}
+                  {% for ef in quote.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% if not quote.design_file and not quote.extra_files %}—{% endif %}
+                </td>
+<td>
+                  <div class="wf-actions">
+                  {% if quote.client_can_respond_to_quote %}
+                  <form method="post" action="{% url 'client_quote_action' 'patches' quote.pk 'accept' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-ok" onclick="return confirm('Accept this quotation and create an order?')">Accept</button></form>
+                  <form method="post" action="{% url 'client_quote_action' 'patches' quote.pk 'reject' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-rej" onclick="return confirm('Reject this quotation?')">Reject</button></form>
+                  {% endif %}
+                  </div>
+                  <button type="button" class="btn-edit-row" onclick='editQuoteRow("patches", {{ quote.pk }}, {
+                  design_name: "{{ quote.design_name|default:""|escapejs }}",
+                  po_number: "{{ quote.po_number|default:""|escapejs }}",
+                  width_mm: "{{ quote.width_mm|default:""|escapejs }}",
+                  height_mm: "{{ quote.height_mm|default:""|escapejs }}",
+                  size_unit: "{{ quote.size_unit|default:"in"|escapejs }}",
+                  colors: "{{ quote.colors|default:""|escapejs }}",
+                  patch_type: "{{ quote.patch_type|default:""|escapejs }}",
+                  backing: "{{ quote.backing|default:""|escapejs }}",
+                  quantity: "{{ quote.quantity|default:""|escapejs }}",
+                  embroidery_pct: "{{ quote.embroidery_pct|default:""|escapejs }}",
+                  thread_color: "{{ quote.thread_color|default:""|escapejs }}",
+                  description: "{{ quote.description|default:""|escapejs }}",
+                  urgent: {% if quote.urgent %}true{% else %}false{% endif %},
+                  date_needed: "{{ quote.date_needed|date:"Y-m-d"|default:"" }}"
+                })'>Edit</button></td>
+              </tr>
+              {% endfor %}
+              {% for quote in quotes_vector %}
+              <tr>
+                <td></td>
+                <td>QT{{ quote.pk }}</td>
+                <td>Vector</td>
+                <td>{{ quote.design_name }}</td>
+                <td>{{ quote.created_at|date:"Y-m-d" }}</td>
+                <td>—</td>
+                <td>{% if quote.quoted_price %}Rs.{{ quote.quoted_price }}{% else %}—{% endif %}</td>
+                <td><span class="{{ quote.status_badge_class }}">{{ quote.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if quote.design_file %}<a href="{{ quote.design_file.url }}" target="_blank" title="Download design file" class="file-link"><i class="bi bi-paperclip"></i></a>{% endif %}
+                  {% for ef in quote.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% if not quote.design_file and not quote.extra_files %}—{% endif %}
+                </td>
+<td>
+                  <div class="wf-actions">
+                  {% if quote.client_can_respond_to_quote %}
+                  <form method="post" action="{% url 'client_quote_action' 'vector' quote.pk 'accept' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-ok" onclick="return confirm('Accept this quotation and create an order?')">Accept</button></form>
+                  <form method="post" action="{% url 'client_quote_action' 'vector' quote.pk 'reject' %}">{% csrf_token %}<button type="submit" class="wf-btn wf-btn-rej" onclick="return confirm('Reject this quotation?')">Reject</button></form>
+                  {% endif %}
+                  </div>
+                  <button type="button" class="btn-edit-row" onclick='editQuoteRow("vector", {{ quote.pk }}, {
+                  design_name: "{{ quote.design_name|default:""|escapejs }}",
+                  po_number: "{{ quote.po_number|default:""|escapejs }}",
+                  vector_format: "{{ quote.vector_format|default:""|escapejs }}",
+                  background: "{{ quote.background|default:""|escapejs }}",
+                  colors: "{{ quote.colors|default:""|escapejs }}",
+                  description: "{{ quote.description|default:""|escapejs }}",
+                  urgent: {% if quote.urgent %}true{% else %}false{% endif %},
+                  date_needed: "{{ quote.date_needed|date:"Y-m-d"|default:"" }}"
+                })'>Edit</button></td>
+              </tr>
+              {% endfor %}
+              {% if not quotes_digitizing and not quotes_patches and not quotes_vector %}
+              <tr class="empty-row"><td colspan="10"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No quotes yet</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PLACE ORDER -->
+      <div class="panel d-none" id="view-placeorder">
+        <div class="panel-title" id="placeorder-title">PLACE NEW ORDER</div>
+
+        <!-- Order Tabs -->
+        <div class="form-tabs" id="order-tabs">
+          <button class="form-tab active" onclick="switchOrderTab('digitizing')">Digitizing Order</button>
+          <button class="form-tab" onclick="switchOrderTab('patches')">Patches Order</button>
+          <button class="form-tab" onclick="switchOrderTab('vector')">Vector Order</button>
+        </div>
+
+        <!-- Digitizing Order Form -->
+        <div id="order-digitizing" class="tab-form">
+          <div class="form-grid-2">
+            <input class="plain-inp" type="text" placeholder="Enter Design Name"/>
+            <input class="plain-inp" type="text" placeholder="PO Number"/>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Height"/><select class="plain-inp dim-unit" name="height_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Width"/><select class="plain-inp dim-unit" name="width_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <input class="plain-inp" type="text" placeholder="Number of Colors"/>
+            <select class="plain-inp"><option value="" disabled selected>Select file format</option><option>DST</option><option>PES</option><option>EMB</option><option>JEF</option><option>XXX</option><option>EXP</option></select>
+            <select class="plain-inp"><option value="" disabled selected>Select fabric type</option><option>Cotton</option><option>Polyester</option><option>Fleece</option><option>Cap</option><option>Denim</option><option>Leather</option></select>
+            <select class="plain-inp"><option value="" disabled selected>Select logo placement</option><option>Left Chest</option><option>Right Chest</option><option>Back</option><option>Cap Front</option><option>Sleeve</option></select>
+          </div>
+          <div class="form-grid-instr">
+            <textarea class="plain-ta" placeholder="Enter Instructions here..."></textarea>
+            <div class="file-col">
+              <div class="file-row"><input class="plain-inp file-inp" type="file" name="design_file"/><button type="button" class="btn-add-file" onclick="addFileInput(this)" title="Add more files">+</button></div>
+            </div>
+          </div>
+          <div class="form-footer">
+            <label class="urgent-wrap"><input type="checkbox" id="ord-dig-urgent"/> <span class="urgent-lbl">Is Urgent ?</span></label>
+            <div class="date-wrap"><label class="urgent-lbl">Date Needed</label><input class="plain-inp" type="date" id="ord-dig-date" name="date_needed" style="width:auto;"/></div>
+            <button class="btn-submit" onclick="submitOrder('digitizing')">Place Order</button>
+          </div>
+        </div>
+
+        <!-- Patches Order Form -->
+        <div id="order-patches" class="tab-form d-none">
+          <div class="form-grid-2">
+            <input class="plain-inp" type="text" placeholder="Enter Patch Name"/>
+            <input class="plain-inp" type="text" placeholder="Enter PO Number"/>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Height"/><select class="plain-inp dim-unit" name="height_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Width"/><select class="plain-inp dim-unit" name="width_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <input class="plain-inp" type="text" placeholder="Number of Colors"/>
+            <select class="plain-inp" name="patch_type"><option value="" disabled selected>Patch Type</option><option>Embroidery</option><option>Woven</option><option>PVC</option><option>Leather</option><option>Chenille</option></select>
+            <select class="plain-inp" name="backing"><option value="" disabled selected>Backing Type</option><option>Iron-on</option><option>Velcro</option><option>Sew-on</option><option>Adhesive</option></select>
+            <input class="plain-inp" type="text" placeholder="Patch Quantity"/>
+            <select class="plain-inp" name="embroidery_pct" style="grid-column:span 1"><option value="" disabled selected>Embroidery %</option><option>30%</option><option>50%</option><option>70%</option><option>80%</option><option>90%</option><option>100%</option></select>
+          </div>
+          <div class="form-grid-instr">
+            <textarea class="plain-ta" placeholder="Thread Color Details"></textarea>
+            <textarea class="plain-ta" placeholder="Enter Instructions here..."></textarea>
+          </div>
+          <div class="file-col" id="file-col-order-patches" style="margin-top:12px;">
+            <div class="file-row"><input class="plain-inp file-inp" type="file" name="design_file"/><button type="button" class="btn-add-file" onclick="addFileInput(this)" title="Add more files">+</button></div>
+          </div>
+          <div class="form-footer" style="margin-top:12px;">
+            <label class="urgent-wrap"><input type="checkbox" id="ord-pat-urgent"/> <span class="urgent-lbl">Is Urgent ?</span></label>
+            <div class="date-wrap"><label class="urgent-lbl">Date Needed</label><input class="plain-inp" type="date" id="ord-pat-date" name="date_needed" style="width:auto;"/></div>
+            <button class="btn-submit" onclick="submitOrder('patches')">Place Order</button>
+          </div>
+        </div>
+
+        <!-- Vector Order Form -->
+        <div id="order-vector" class="tab-form d-none">
+          <div class="form-grid-2">
+            <input class="plain-inp" type="text" placeholder="Enter Design Name"/>
+            <input class="plain-inp" type="text" placeholder="Enter PO Number"/>
+            <select class="plain-inp"><option value="" disabled selected>Select file format</option><option>AI</option><option>EPS</option><option>SVG</option><option>PDF</option><option>CDR</option></select>
+            <select class="plain-inp"><option value="" disabled selected>Select vector color</option><option>Full Color</option><option>Black & White</option><option>Spot Colors</option></select>
+            <input class="plain-inp" type="text" placeholder="Enter Number of Colors"/>
+          </div>
+          <div class="form-grid-instr">
+            <textarea class="plain-ta" placeholder="Enter Instructions here..."></textarea>
+            <div class="file-col">
+              <div class="file-row"><input class="plain-inp file-inp" type="file" name="design_file"/><button type="button" class="btn-add-file" onclick="addFileInput(this)" title="Add more files">+</button></div>
+            </div>
+          </div>
+          <div class="form-footer">
+            <label class="urgent-wrap"><input type="checkbox" id="ord-vec-urgent"/> <span class="urgent-lbl">Is Urgent ?</span></label>
+            <div class="date-wrap"><label class="urgent-lbl">Date Needed</label><input class="plain-inp" type="date" id="ord-vec-date" name="date_needed" style="width:auto;"/></div>
+            <button class="btn-submit" onclick="submitOrder('vector')">Place Vector</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLACE QUOTE -->
+      <div class="panel d-none" id="view-placequote">
+        <div class="panel-title" id="placequote-title">ADD NEW QUOTE</div>
+
+        <!-- Quote Tabs -->
+        <div class="form-tabs" id="quote-tabs">
+          <button class="form-tab active" onclick="switchQuoteTab('digitizing')">Digitizing Quote</button>
+          <button class="form-tab" onclick="switchQuoteTab('patches')">Patches Quote</button>
+          <button class="form-tab" onclick="switchQuoteTab('vector')">Vector Quote</button>
+        </div>
+
+        <!-- Digitizing Quote Form -->
+        <div id="quote-digitizing" class="tab-form">
+          <div class="form-grid-2">
+            <input class="plain-inp" type="text" placeholder="Enter Design Name"/>
+            <input class="plain-inp" type="text" placeholder="Enter PO Number"/>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Height"/><select class="plain-inp dim-unit" name="height_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Width"/><select class="plain-inp dim-unit" name="width_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <input class="plain-inp" type="text" placeholder="Enter Number of Colors"/>
+            <select class="plain-inp"><option value="" disabled selected>Select file format</option><option>DST</option><option>PES</option><option>EMB</option><option>JEF</option><option>XXX</option><option>EXP</option></select>
+            <select class="plain-inp"><option value="" disabled selected>Select fabric type</option><option>Cotton</option><option>Polyester</option><option>Fleece</option><option>Cap</option><option>Denim</option><option>Leather</option></select>
+            <select class="plain-inp"><option value="" disabled selected>Select logo placement</option><option>Left Chest</option><option>Right Chest</option><option>Back</option><option>Cap Front</option><option>Sleeve</option></select>
+          </div>
+          <div class="form-grid-instr">
+            <textarea class="plain-ta" placeholder="Enter Description here..."></textarea>
+            <div class="file-col">
+              <div class="file-row"><input class="plain-inp file-inp" type="file" name="design_file"/><button type="button" class="btn-add-file" onclick="addFileInput(this)" title="Add more files">+</button></div>
+            </div>
+          </div>
+          <div class="form-footer">
+            <label class="urgent-wrap"><input type="checkbox" id="qt-dig-urgent"/> <span class="urgent-lbl">Is Urgent ?</span></label>
+            <div class="date-wrap"><label class="urgent-lbl">Date Needed</label><input class="plain-inp" type="date" id="qt-dig-date" name="date_needed" style="width:auto;"/></div>
+            <button class="btn-submit" onclick="submitQuote('digitizing')">Place Quote</button>
+          </div>
+        </div>
+
+        <!-- Patches Quote Form -->
+        <div id="quote-patches" class="tab-form d-none">
+          <div class="form-grid-2">
+            <input class="plain-inp" type="text" placeholder="Enter Patch Name"/>
+            <input class="plain-inp" type="text" placeholder="Enter PO Number"/>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Height"/><select class="plain-inp dim-unit" name="height_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <div class="dim-wrap"><input class="plain-inp dim-inp" type="number" min="0" step="0.01" placeholder="Width"/><select class="plain-inp dim-unit" name="width_unit" onchange="syncDimUnit(this)"><option value="in">in</option><option value="cm">cm</option><option value="mm">mm</option></select></div>
+            <input class="plain-inp" type="text" placeholder="Number of Colors"/>
+            <select class="plain-inp" name="patch_type"><option value="" disabled selected>Patch Type</option><option>Embroidery</option><option>Woven</option><option>PVC</option><option>Leather</option><option>Chenille</option></select>
+            <select class="plain-inp" name="backing"><option value="" disabled selected>Backing Type</option><option>Iron-on</option><option>Velcro</option><option>Sew-on</option><option>Adhesive</option></select>
+            <input class="plain-inp" type="text" placeholder="Patch Quantity"/>
+            <select class="plain-inp" name="embroidery_pct" style="grid-column:span 1"><option value="" disabled selected>Embroidery %</option><option>30%</option><option>50%</option><option>70%</option><option>80%</option><option>90%</option><option>100%</option></select>
+          </div>
+          <div class="form-grid-instr">
+            <textarea class="plain-ta" placeholder="Thread Color Details"></textarea>
+            <textarea class="plain-ta" placeholder="Enter Description here..."></textarea>
+          </div>
+          <div class="file-col" id="file-col-quote-patches" style="margin-top:12px;">
+            <div class="file-row"><input class="plain-inp file-inp" type="file" name="design_file"/><button type="button" class="btn-add-file" onclick="addFileInput(this)" title="Add more files">+</button></div>
+          </div>
+          <div class="form-footer" style="margin-top:12px;">
+            <label class="urgent-wrap"><input type="checkbox" id="qt-pat-urgent"/> <span class="urgent-lbl">Is Urgent ?</span></label>
+            <div class="date-wrap"><label class="urgent-lbl">Date Needed</label><input class="plain-inp" type="date" id="qt-pat-date" name="date_needed" style="width:auto;"/></div>
+            <button class="btn-submit" onclick="submitQuote('patches')">Place Quote</button>
+          </div>
+        </div>
+
+        <!-- Vector Quote Form -->
+        <div id="quote-vector" class="tab-form d-none">
+          <div class="form-grid-2">
+            <input class="plain-inp" type="text" placeholder="Enter Design Name"/>
+            <input class="plain-inp" type="text" placeholder="Enter PO Number"/>
+            <select class="plain-inp"><option value="" disabled selected>Select file format</option><option>AI</option><option>EPS</option><option>SVG</option><option>PDF</option><option>CDR</option></select>
+            <select class="plain-inp"><option value="" disabled selected>Select vector color</option><option>Full Color</option><option>Black & White</option><option>Spot Colors</option></select>
+            <input class="plain-inp" type="text" placeholder="Enter Number of Colors"/>
+          </div>
+          <div class="form-grid-instr">
+            <textarea class="plain-ta" placeholder="Enter Description here..."></textarea>
+            <div class="file-col">
+              <div class="file-row"><input class="plain-inp file-inp" type="file" name="design_file"/><button type="button" class="btn-add-file" onclick="addFileInput(this)" title="Add more files">+</button></div>
+            </div>
+          </div>
+          <div class="form-footer">
+            <label class="urgent-wrap"><input type="checkbox" id="qt-vec-urgent"/> <span class="urgent-lbl">Is Urgent ?</span></label>
+            <div class="date-wrap"><label class="urgent-lbl">Date Needed</label><input class="plain-inp" type="date" id="qt-vec-date" name="date_needed" style="width:auto;"/></div>
+            <button class="btn-submit" onclick="submitQuote('vector')">Place Quote</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BILLING -->
+      <div class="panel d-none" id="view-billing">
+        <div class="panel-title"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;opacity:0.7;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg> Billing</div>
+        <div class="btabs">
+          <button class="btab" id="btab-uninvoiced" onclick="setBTab('uninvoiced')"><i class="bi bi-receipt me-1"></i>Uninvoiced</button>
+          <button class="btab active" id="btab-unpaid" onclick="setBTab('unpaid')"><i class="bi bi-clock-history me-1"></i>Unpaid</button>
+          <button class="btab" id="btab-paid" onclick="setBTab('paid')"><i class="bi bi-check-circle me-1"></i>Paid</button>
+        </div>
+        <div id="billing-uninvoiced" class="d-none">
+          <div class="tbl-hdr">Uninvoiced Orders</div>
+          <div class="tbl-wrap"><table class="rec"><thead><tr><th>S#</th><th>Invoice#</th><th>Description</th><th>Date</th><th>Amount</th></tr></thead><tbody>
+          {% for inv in invoices_uninvoiced %}
+          <tr><td>{{ forloop.counter }}</td><td>{{ inv.invoice_number }}</td><td>{{ inv.description|default:"—" }}</td><td>{{ inv.created_at|date:"Y-m-d" }}</td><td>Rs.{{ inv.amount }}</td></tr>
+          {% empty %}
+          <tr class="empty-row"><td colspan="5"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No uninvoiced orders</td></tr>
+          {% endfor %}
+          </tbody></table></div>
+        </div>
+        <div id="billing-unpaid">
+          <div class="tbl-hdr">Unpaid Invoices</div>
+          <div class="tbl-wrap"><table class="rec"><thead><tr><th>S#</th><th>Invoice#</th><th>Amount</th><th>Status</th><th>Due Date</th><th>View</th></tr></thead><tbody>
+          {% for inv in billing_invoices_unpaid %}
+          <tr><td>{{ forloop.counter }}</td><td>{{ inv.invoice_number }}</td><td>Rs.{{ inv.balance_due }}</td><td><span class="badge-pend">Unpaid</span></td><td>{{ inv.due_date|default:"—" }}</td><td><a class="tbl-btn" href="{% url 'invoice_detail' inv.pk %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> PDF</a></td></tr>
+          {% endfor %}
+          {% for inv in invoices_unpaid %}
+          <tr><td>{{ forloop.counter }}</td><td>{{ inv.invoice_number }}</td><td>Rs.{{ inv.amount }}</td><td><span class="badge-pend">Unpaid</span></td><td>{{ inv.due_date|default:"—" }}</td><td><button class="tbl-btn"><i class="bi bi-file-earmark-pdf"></i> PDF</button></td></tr>
+          {% endfor %}
+          {% if not billing_invoices_unpaid and not invoices_unpaid %}
+          <tr class="empty-row"><td colspan="6"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No unpaid invoices</td></tr>
+          {% endif %}
+          </tbody></table></div>
+        </div>
+        <div id="billing-paid" class="d-none">
+          <div class="tbl-hdr">Paid Invoices</div>
+          <div class="tbl-wrap"><table class="rec"><thead><tr><th>S#</th><th>Invoice#</th><th>Amount</th><th>Status</th><th>Paid Date</th><th>View</th></tr></thead><tbody>
+          {% for inv in billing_invoices_paid %}
+          <tr><td>{{ forloop.counter }}</td><td>{{ inv.invoice_number }}</td><td>Rs.{{ inv.balance_due }}</td><td><span class="badge-ok">Paid</span></td><td>{{ inv.paid_at|date:"Y-m-d"|default:"—" }}</td><td><a class="tbl-btn" href="{% url 'invoice_detail' inv.pk %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> PDF</a></td></tr>
+          {% endfor %}
+          {% for inv in invoices_paid %}
+          <tr><td>{{ forloop.counter }}</td><td>{{ inv.invoice_number }}</td><td>Rs.{{ inv.amount }}</td><td><span class="badge-ok">Paid</span></td><td>{{ inv.paid_at|date:"Y-m-d"|default:"—" }}</td><td><button class="tbl-btn"><i class="bi bi-file-earmark-pdf"></i> PDF</button></td></tr>
+          {% endfor %}
+          {% if not billing_invoices_paid and not invoices_paid %}
+          <tr class="empty-row"><td colspan="6"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No paid invoices</td></tr>
+          {% endif %}
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <!-- DOWNLOADS -->
+      <div class="panel d-none" id="view-downloads">
+        <div class="panel-title"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;opacity:0.7;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg> Downloads</div>
+        <div class="tbl-hdr"><i class="bi bi-download me-2"></i>Final Files — Completed Orders</div>
+        <div class="tbl-wrap">
+          <table class="rec">
+            <thead><tr><th>S.No</th><th>Order ID</th><th>Type</th><th>Design Name</th><th>Status</th><th>Design Files</th><th>Invoice</th><th>Receipt</th></tr></thead>
+            <tbody>
+              {% for order in downloads_digitizing %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>ORD{{ order.pk }}</td>
+                <td>Digitizing</td>
+                <td>{{ order.design_name }}</td>
+                <td><span class="{{ order.status_badge_class }}">{{ order.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if order.preview_file %}<a href="{{ order.preview_file.url }}" target="_blank" title="View preview" class="file-link"><i class="bi bi-image"></i> Preview</a>{% endif %}
+                  {% if order.is_download_unlocked %}<a href="{% url 'download_final' 'digitizing' order.pk %}" target="_blank" title="Download final file" class="file-link"><i class="bi bi-paperclip"></i> Final</a>
+                    {% for ef in order.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% else %}<span class="wf-locked"><i class="bi bi-lock"></i> Unlocks after payment</span>{% endif %}
+                  {% if not order.preview_file and not order.is_download_unlocked %}—{% endif %}
+                </td>
+                <td>{% if order.invoice %}<a class="tbl-btn" href="{% url 'invoice_detail' order.invoice.pk %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> Invoice</a>{% else %}—{% endif %}</td>
+                <td>{% if order.invoice.status == 'paid' %}<a class="tbl-btn" href="{% url 'receipt_detail' order.invoice.pk %}" target="_blank"><i class="bi bi-receipt"></i> Receipt</a>{% else %}—{% endif %}</td>
+              </tr>
+              {% endfor %}
+              {% for order in downloads_patches %}
+              <tr>
+                <td></td>
+                <td>ORD{{ order.pk }}</td>
+                <td>Patches</td>
+                <td>{{ order.design_name }}</td>
+                <td><span class="{{ order.status_badge_class }}">{{ order.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if order.preview_file %}<a href="{{ order.preview_file.url }}" target="_blank" title="View preview" class="file-link"><i class="bi bi-image"></i> Preview</a>{% endif %}
+                  {% if order.is_download_unlocked %}<a href="{% url 'download_final' 'patches' order.pk %}" target="_blank" title="Download final file" class="file-link"><i class="bi bi-paperclip"></i> Final</a>
+                    {% for ef in order.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% else %}<span class="wf-locked"><i class="bi bi-lock"></i> Unlocks after payment</span>{% endif %}
+                  {% if not order.preview_file and not order.is_download_unlocked %}—{% endif %}
+                </td>
+                <td>{% if order.invoice %}<a class="tbl-btn" href="{% url 'invoice_detail' order.invoice.pk %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> Invoice</a>{% else %}—{% endif %}</td>
+                <td>{% if order.invoice.status == 'paid' %}<a class="tbl-btn" href="{% url 'receipt_detail' order.invoice.pk %}" target="_blank"><i class="bi bi-receipt"></i> Receipt</a>{% else %}—{% endif %}</td>
+              </tr>
+              {% endfor %}
+              {% for order in downloads_vector %}
+              <tr>
+                <td></td>
+                <td>ORD{{ order.pk }}</td>
+                <td>Vector</td>
+                <td>{{ order.design_name }}</td>
+                <td><span class="{{ order.status_badge_class }}">{{ order.get_status_display }}</span></td>
+                <td class="files-cell">
+                  {% if order.preview_file %}<a href="{{ order.preview_file.url }}" target="_blank" title="View preview" class="file-link"><i class="bi bi-image"></i> Preview</a>{% endif %}
+                  {% if order.is_download_unlocked %}<a href="{% url 'download_final' 'vector' order.pk %}" target="_blank" title="Download final file" class="file-link"><i class="bi bi-paperclip"></i> Final</a>
+                    {% for ef in order.extra_files %}<a href="{{ ef.file.url }}" target="_blank" title="Download extra file {{ forloop.counter }}" class="file-link"><i class="bi bi-paperclip"></i>{{ forloop.counter|add:"1" }}</a>{% endfor %}
+                  {% else %}<span class="wf-locked"><i class="bi bi-lock"></i> Unlocks after payment</span>{% endif %}
+                  {% if not order.preview_file and not order.is_download_unlocked %}—{% endif %}
+                </td>
+                <td>{% if order.invoice %}<a class="tbl-btn" href="{% url 'invoice_detail' order.invoice.pk %}" target="_blank"><i class="bi bi-file-earmark-pdf"></i> Invoice</a>{% else %}—{% endif %}</td>
+                <td>{% if order.invoice.status == 'paid' %}<a class="tbl-btn" href="{% url 'receipt_detail' order.invoice.pk %}" target="_blank"><i class="bi bi-receipt"></i> Receipt</a>{% else %}—{% endif %}</td>
+              </tr>
+              {% endfor %}
+              {% if not downloads_digitizing and not downloads_patches and not downloads_vector %}
+              <tr class="empty-row"><td colspan="8"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No completed orders yet — final files appear here once an order is marked completed or delivered</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- UPLOADS -->
+      <div class="panel d-none" id="view-uploads">
+        <div class="panel-title"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;opacity:0.7;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg> Uploads</div>
+        <div class="tbl-hdr"><i class="bi bi-files me-2"></i>Files you've sent</div>
+        <div class="tbl-wrap">
+          <table class="rec">
+            <thead><tr><th>S.No</th><th>Order / Quote</th><th>Design Name</th><th>Type</th><th>File</th><th>Uploaded</th></tr></thead>
+            <tbody>
+              {% for u in all_uploads %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ u.label }} #{{ u.pk }}</td>
+                <td>{{ u.design_name }}</td>
+                <td>{{ u.kind }}</td>
+                <td><a href="{{ u.file_url }}" target="_blank" class="file-link"><i class="bi bi-paperclip"></i> {{ u.file_name }}</a></td>
+                <td>{{ u.uploaded_at|date:"Y-m-d" }}</td>
+              </tr>
+              {% empty %}
+              <tr class="empty-row"><td colspan="6"><i class="bi bi-inbox" style="font-size:22px;display:block;margin-bottom:6px;opacity:.35"></i>No files uploaded yet</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="panel d-none" id="view-profile">
+        <div class="panel-title"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;opacity:0.7;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg> My Profile</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div><div class="field-row"><span class="field-lbl">Company</span><input class="field-inp" type="text" value=""/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Contact</span><input class="field-inp" type="text" value="{{ user.get_full_name }}"/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Email 1</span><input class="field-inp" type="email" value="{{ user.email }}"/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Email 2</span><input class="field-inp" type="email" placeholder="Secondary email"/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Phone</span><input class="field-inp" type="tel" value="{{ user.phone }}"/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Cell</span><input class="field-inp" type="tel" placeholder="Cell number"/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Login ID</span><input class="field-inp" type="text" value="{{ user.username }}"/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Password</span><input class="field-inp" type="password" value=""/></div></div>
+          <div style="grid-column:span 2"><div class="field-row" style="align-items:flex-start"><span class="field-lbl" style="padding-top:12px">Address</span><textarea class="field-ta" placeholder="Street Address"></textarea></div></div>
+          <div><div class="field-row"><span class="field-lbl" style="min-width:60px">City</span><input class="field-inp" type="text" placeholder="City"/></div></div>
+          <div><div class="field-row"><span class="field-lbl" style="min-width:60px">State</span><input class="field-inp" type="text" value="Tamil Nadu"/></div></div>
+          <div><div class="field-row"><span class="field-lbl" style="min-width:80px">Zip</span><input class="field-inp" type="text" placeholder="Zip Code"/></div></div>
+          <div><div class="field-row"><span class="field-lbl">Country</span><select class="field-inp"><option>United States</option><option selected>India</option><option>United Kingdom</option><option>Canada</option></select></div></div>
+          <div style="grid-column:span 2;text-align:right;margin-top:4px;"><form method="POST" action="{% url 'update_profile' %}">
+{% csrf_token %}
+<input type="hidden" name="first_name" id="prof_first">
+<input type="hidden" name="last_name" id="prof_last">
+<input type="hidden" name="email" id="prof_email">
+<input type="hidden" name="phone" id="prof_phone">
+<button type="submit" class="btn-accent" onclick="syncProfile(event)"><i class="bi bi-check-circle me-2"></i>Update Profile</button>
+</form></div>
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+
+    <!-- FOOTER inside main -->
+    <footer class="page-footer">
+      <div class="ft-inner">
+        <div class="ft-grid">
+          <!-- Brand -->
+          <div>
+            <div class="ft-brand">
+              <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitizing" style="height:44px;width:auto;"/>
+            </div>
+            <p class="ft-desc">Professional embroidery digitizing studio delivering precise, high-quality designs for all garment types and formats worldwide.</p>
+            <div class="ft-socials">
+              <div class="ft-social" title="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div>
+              <div class="ft-social" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+              <div class="ft-social" title="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+            </div>
+          </div>
+          <!-- Services -->
+          <div>
+            <div class="ft-col-title">Services</div>
+            <div class="ft-links">
+              <a href="#" class="ft-link">Embroidery Digitizing</a>
+              <a href="#" class="ft-link">Logo Digitizing</a>
+              <a href="#" class="ft-link">Cap Digitizing</a>
+              <a href="#" class="ft-link highlight">Vector Art <svg width="10" height="10" viewBox="0 0 24 24" fill="#38bdf8" style="display:inline;vertical-align:middle;"><path d="M12 2l1.8 5.5L19 9l-5.2 3.8 2 6.2L12 15.5l-3.8 3.5 2-6.2L5 9l5.2-1.5L12 2z"/></svg></a>
+            </div>
+          </div>
+          <!-- Quick links -->
+          <div>
+            <div class="ft-col-title">Quick Links</div>
+            <div class="ft-links">
+              <a href="{% url 'index' %}" class="ft-link">Home</a>
+              <a href="#" onclick="showView('dashboard')" class="ft-link">Dashboard</a>
+              <a href="{% url 'auth' %}" class="ft-link">Login</a>
+              <a href="{% url 'auth' %}#register" class="ft-link">Register</a>
+            </div>
+          </div>
+        </div>
+        <div class="ft-bottom">
+          <p class="ft-copy">© 2026 RS Digitizing. All rights reserved. Crafted with <svg width="12" height="12" viewBox="0 0 24 24" fill="#f43f5e" style="display:inline;vertical-align:middle;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> in Tiruppur, Tamil Nadu, India.</p>
+          <p class="ft-copy"><a href="#" style="color:inherit;text-decoration:none;">Privacy Policy</a> · <a href="#" style="color:inherit;text-decoration:none;">Terms of Service</a></p>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+  const VIEWS = ['dashboard','orders','quotes','placeorder','placequote','billing','downloads','uploads','profile'];
+
+  function showView(name) {
+    VIEWS.forEach(v => {
+      const el  = document.getElementById('view-' + v);
+      const nav = document.getElementById('nav-' + v);
+      if (el)  el.classList.toggle('d-none', v !== name);
+      if (nav) nav.classList.toggle('active', v === name);
+    });
+    if (name === 'placeorder' && typeof resetOrderPanelToCreate === 'function') resetOrderPanelToCreate();
+    if (name === 'placequote' && typeof resetQuotePanelToCreate === 'function') resetQuotePanelToCreate();
+    document.querySelector('.main-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function setBTab(name) {
+    ['uninvoiced','unpaid','paid'].forEach(t => {
+      document.getElementById('billing-' + t).classList.toggle('d-none', t !== name);
+      document.getElementById('btab-' + t).classList.toggle('active', t === name);
+    });
+  }
+
+  let sidebarOpen = true;
+  function toggleSidebar() {
+    const sb   = document.getElementById('sidebar');
+    const main = document.getElementById('main');
+    sidebarOpen = !sidebarOpen;
+    sb.classList.toggle('collapsed', !sidebarOpen);
+    main.classList.toggle('expanded', !sidebarOpen);
+  }
+
+  showView('dashboard');
+
+  function switchOrderTab(name) {
+    ['digitizing','patches','vector'].forEach(t => {
+      document.getElementById('order-' + t).classList.toggle('d-none', t !== name);
+    });
+    document.querySelectorAll('#order-tabs .form-tab').forEach((btn, i) => {
+      btn.classList.toggle('active', ['digitizing','patches','vector'][i] === name);
+    });
+  }
+
+  function switchQuoteTab(name) {
+    ['digitizing','patches','vector'].forEach(t => {
+      document.getElementById('quote-' + t).classList.toggle('d-none', t !== name);
+    });
+    document.querySelectorAll('#quote-tabs .form-tab').forEach((btn, i) => {
+      btn.classList.toggle('active', ['digitizing','patches','vector'][i] === name);
+    });
+  }
+</script>
+
+<!-- Django Flash Messages -->
+{% if messages %}
+<div id="django-messages" style="position:fixed;top:80px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;">
+{% for message in messages %}
+<div style="background:{% if message.tags == 'error' %}#fee2e2{% else %}#d1fae5{% endif %};
+  color:{% if message.tags == 'error' %}#b91c1c{% else %}#065f46{% endif %};
+  border-radius:12px;padding:12px 18px;font-size:.84rem;font-family:'DM Sans',sans-serif;
+  box-shadow:0 4px 14px rgba(0,0,0,.12);max-width:340px;">
+  {{ message }}
+</div>
+{% endfor %}
+</div>
+<script>setTimeout(()=>{var el=document.getElementById('django-messages');if(el)el.remove();},4000);</script>
+{% endif %}
+
+<!-- Hidden order/quote submit forms -->
+<form id="orderForm" method="POST" action="{% url 'place_order' %}" enctype="multipart/form-data" style="display:none">
+  {% csrf_token %}
+  <input type="hidden" name="order_type" id="orderTypeInput">
+</form>
+<form id="quoteForm" method="POST" action="{% url 'place_quote' %}" enctype="multipart/form-data" style="display:none">
+  {% csrf_token %}
+  <input type="hidden" name="quote_type" id="quoteTypeInput">
+</form>
+
+<script>
+// Add more file inputs
+function addFileInput(btn) {
+  var col = btn.closest('.file-col');
+  var rows = col.querySelectorAll('.file-row');
+  var n = rows.length + 1;
+  var row = document.createElement('div');
+  row.className = 'file-row';
+  var inp = document.createElement('input');
+  inp.className = 'plain-inp file-inp';
+  inp.type = 'file';
+  inp.name = 'design_file';
+  var rmv = document.createElement('button');
+  rmv.type = 'button';
+  rmv.className = 'btn-add-file';
+  rmv.style.background = '#ef4444';
+  rmv.title = 'Remove';
+  rmv.textContent = '×';
+  rmv.onclick = function(){ col.removeChild(row); };
+  row.appendChild(inp);
+  row.appendChild(rmv);
+  col.appendChild(row);
+}
+
+// Order submission
+// Map placeholder / name to model field names
+function getFieldName(el, type) {
+  if (el.name && el.name !== 'design_file') return el.name;
+  var ph = (el.placeholder || '').toLowerCase();
+  var tag = el.tagName.toLowerCase();
+  if (ph.includes('design name') || ph.includes('patch name')) return 'design_name';
+  if (ph.includes('po number')) return 'po_number';
+  if (ph === 'height') return 'height_mm';
+  if (ph === 'width')  return 'width_mm';
+  if (ph.includes('height')) return 'height_mm';
+  if (ph.includes('width'))  return 'width_mm';
+  if (ph.includes('number of colors') || ph.includes('colors')) return 'colors';
+  if (ph.includes('instruction')) return 'instructions';
+  if (ph.includes('description')) return 'description';
+  if (ph.includes('thread color')) return 'thread_color';
+  if (ph.includes('quantity')) return 'quantity';
+  if (el.id && el.id.includes('urgent')) return 'urgent';
+  if (el.type === 'checkbox') return 'urgent';
+  if (el.type === 'date') return 'date_needed';
+  if (el.type === 'file') return 'design_file';
+  if (tag === 'select') {
+    var opts = Array.from(el.options).map(o => o.text.toLowerCase());
+    if (opts.some(o => o.includes('dst') || o.includes('pes') || o.includes('emb'))) return 'format';
+    if (opts.some(o => o.includes('ai') || o.includes('eps') || o.includes('svg'))) return 'vector_format';
+    if (opts.some(o => o.includes('cotton') || o.includes('polyester') || o.includes('fleece'))) return 'fabric';
+    if (opts.some(o => o.includes('left chest') || o.includes('right chest') || o.includes('back'))) return 'placement';
+    if (opts.some(o => o.includes('embroidery') || o.includes('woven') || o.includes('pvc'))) return 'patch_type';
+    if (opts.some(o => o.includes('iron-on') || o.includes('velcro') || o.includes('sew-on'))) return 'backing';
+    if (opts.some(o => o.includes('full color') || o.includes('black') || o.includes('spot'))) return 'background';
+    if (opts.some(o => o.includes('%'))) return 'embroidery_pct';
+    if (opts.some(o => o.includes('in') || o.includes('cm') || o.includes('mm'))) return 'size_unit';
+  }
+  return el.id || el.name || 'field';
+}
+
+// Keep height/width unit dropdowns in sync (one size_unit for the whole record)
+function syncDimUnit(changedEl) {
+  var scope = changedEl.closest('.tab-form') || changedEl.closest('.form-grid-2') || document;
+  scope.querySelectorAll('select.dim-unit').forEach(function(sel) {
+    sel.value = changedEl.value;
+  });
+}
+
+function buildFormData(src, type, typeField) {
+  var csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  var fd = new FormData();
+  fd.append('csrfmiddlewaretoken', csrf);
+  fd.append(typeField, type);
+  var unitSelects = src.querySelectorAll('select[name="height_unit"], select[name="width_unit"]');
+  var sizeUnit = unitSelects.length ? unitSelects[0].value : '';
+  if (sizeUnit) fd.append('size_unit', sizeUnit);
+  src.querySelectorAll('input,select,textarea').forEach(function(el) {
+    if (el.name === 'height_unit' || el.name === 'width_unit') return;
+    var fieldName = getFieldName(el, type);
+    if (!fieldName || fieldName === 'field') return;
+    if (el.type === 'file') {
+      if (el.files && el.files.length > 0) {
+        for (var f = 0; f < el.files.length; f++) {
+          fd.append('design_file', el.files[f]);
+        }
+      }
+    } else if (el.type === 'checkbox') {
+      fd.append(fieldName, el.checked ? 'on' : '');
+    } else {
+      fd.append(fieldName, el.value);
+    }
+  });
+  return fd;
+}
+
+// Edit-mode state for orders/quotes
+var editOrderState = null;
+var editQuoteState = null;
+
+function populateFormFields(containerId, type, data) {
+  data = data || {};
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  container.querySelectorAll('input,select,textarea').forEach(function(el) {
+    if (el.type === 'file') return;
+    if (el.name === 'height_unit' || el.name === 'width_unit') {
+      el.value = data.size_unit || 'in';
+      return;
+    }
+    var fieldName = getFieldName(el, type);
+    if (!fieldName || fieldName === 'field') return;
+    if (el.type === 'checkbox') { el.checked = !!data[fieldName]; return; }
+    var val = data[fieldName];
+    el.value = (val === undefined || val === null) ? '' : val;
+  });
+}
+
+function resetOrderPanelToCreate() {
+  editOrderState = null;
+  var title = document.getElementById('placeorder-title');
+  if (title) title.textContent = 'PLACE NEW ORDER';
+  ['digitizing', 'patches', 'vector'].forEach(function(t) {
+    populateFormFields('order-' + t, t, {});
+    var btn = document.querySelector('#order-' + t + ' .btn-submit');
+    if (btn) btn.textContent = (t === 'vector') ? 'Place Vector' : 'Place Order';
+  });
+}
+
+function resetQuotePanelToCreate() {
+  editQuoteState = null;
+  var title = document.getElementById('placequote-title');
+  if (title) title.textContent = 'ADD NEW QUOTE';
+  ['digitizing', 'patches', 'vector'].forEach(function(t) {
+    populateFormFields('quote-' + t, t, {});
+    var btn = document.querySelector('#quote-' + t + ' .btn-submit');
+    if (btn) btn.textContent = 'Place Quote';
+  });
+}
+
+function editOrderRow(type, pk, data) {
+  showView('placeorder');
+  switchOrderTab(type);
+  populateFormFields('order-' + type, type, data);
+  editOrderState = { type: type, pk: pk };
+  var title = document.getElementById('placeorder-title');
+  if (title) title.textContent = 'EDIT ORDER #' + pk;
+  var btn = document.querySelector('#order-' + type + ' .btn-submit');
+  if (btn) btn.textContent = 'Update Order';
+}
+
+function editQuoteRow(type, pk, data) {
+  showView('placequote');
+  switchQuoteTab(type);
+  populateFormFields('quote-' + type, type, data);
+  editQuoteState = { type: type, pk: pk };
+  var title = document.getElementById('placequote-title');
+  if (title) title.textContent = 'EDIT QUOTE #' + pk;
+  var btn = document.querySelector('#quote-' + type + ' .btn-submit');
+  if (btn) btn.textContent = 'Update Quote';
+}
+
+// ── Client-side validation ────────────────────────────────────────────────
+function showFormError(container, errs) {
+  clearFormError(container);
+  var box = document.createElement('div');
+  box.className = 'form-error-banner';
+  box.innerHTML = errs.map(function(e) { return '<div>• ' + e + '</div>'; }).join('');
+  container.insertBefore(box, container.firstChild);
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearFormError(container) {
+  var existing = container.querySelector('.form-error-banner');
+  if (existing) existing.remove();
+}
+
+function validateTabForm(container, type) {
+  var errs = [];
+
+  function fieldEl(matchFn) {
+    var found = null;
+    container.querySelectorAll('input,select,textarea').forEach(function(el) {
+      if (found) return;
+      if (el.name === 'height_unit' || el.name === 'width_unit') return;
+      var fn = getFieldName(el, type);
+      if (matchFn(fn)) found = el;
+    });
+    return found;
+  }
+
+  var nameEl = fieldEl(function(fn) { return fn === 'design_name'; });
+  if (nameEl && !nameEl.value.trim()) {
+    errs.push((type === 'patches' ? 'Patch Name' : 'Design Name') + ' is required.');
+  }
+
+  ['width_mm', 'height_mm'].forEach(function(fn) {
+    var el = fieldEl(function(f) { return f === fn; });
+    if (el && el.value !== '' && (isNaN(el.value) || Number(el.value) <= 0)) {
+      errs.push((fn === 'width_mm' ? 'Width' : 'Height') + ' must be a positive number.');
+    }
+  });
+
+  var colorsEl = fieldEl(function(fn) { return fn === 'colors'; });
+  if (colorsEl && colorsEl.value !== '' && (isNaN(colorsEl.value) || Number(colorsEl.value) < 0 || Number(colorsEl.value) % 1 !== 0)) {
+    errs.push('Number of Colors must be a whole, non-negative number.');
+  }
+
+  var qtyEl = fieldEl(function(fn) { return fn === 'quantity'; });
+  if (qtyEl && qtyEl.value !== '' && (isNaN(qtyEl.value) || Number(qtyEl.value) <= 0 || Number(qtyEl.value) % 1 !== 0)) {
+    errs.push('Quantity must be a positive whole number.');
+  }
+
+  var dateEl = fieldEl(function(fn) { return fn === 'date_needed'; });
+  if (dateEl && dateEl.value) {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var picked = new Date(dateEl.value + 'T00:00:00');
+    if (picked < today) errs.push('Date Needed cannot be in the past.');
+  }
+
+  return errs;
+}
+
+function submitOrder(type) {
+  var src = document.getElementById('order-' + type);
+  clearFormError(src);
+  var errs = validateTabForm(src, type);
+  if (errs.length) { showFormError(src, errs); return; }
+  var fd = buildFormData(src, type, 'order_type');
+  var action;
+  if (editOrderState && editOrderState.type === type) {
+    action = '/dashboard/edit-order/' + type + '/' + editOrderState.pk + '/';
+  } else {
+    action = document.getElementById('orderForm').action;
+  }
+  fetch(action, { method: 'POST', body: fd, redirect: 'manual' })
+    .then(function(r) {
+      editOrderState = null;
+      window.location.href = r.headers.get('Location') || '/dashboard/?view=orders';
+    })
+    .catch(function() { editOrderState = null; window.location.href = '/dashboard/?view=orders'; });
+}
+
+function submitQuote(type) {
+  var src = document.getElementById('quote-' + type);
+  clearFormError(src);
+  var errs = validateTabForm(src, type);
+  if (errs.length) { showFormError(src, errs); return; }
+  var fd = buildFormData(src, type, 'quote_type');
+  var action;
+  if (editQuoteState && editQuoteState.type === type) {
+    action = '/dashboard/edit-quote/' + type + '/' + editQuoteState.pk + '/';
+  } else {
+    action = document.getElementById('quoteForm').action;
+  }
+  fetch(action, { method: 'POST', body: fd, redirect: 'manual' })
+    .then(function(r) {
+      editQuoteState = null;
+      window.location.href = r.headers.get('Location') || '/dashboard/?view=quotes';
+    })
+    .catch(function() { editQuoteState = null; window.location.href = '/dashboard/?view=quotes'; });
+}
+
+// Profile sync
+function syncProfile(e) {
+  e.preventDefault();
+  var fullName = document.querySelector('[value="{{ user.get_full_name }}"]') || {value:''};
+  // Just submit the form with whatever's in the profile fields
+  document.getElementById('prof_email').value = document.querySelector('input[type="email"][value]') ? document.querySelector('input[type="email"]').value : '';
+  document.getElementById('prof_phone').value = document.querySelector('input[type="tel"]') ? document.querySelector('input[type="tel"]').value : '';
+  var nameParts = (fullName.value || '').split(' ');
+  document.getElementById('prof_first').value = nameParts[0] || '';
+  document.getElementById('prof_last').value = nameParts.slice(1).join(' ') || '';
+  e.target.closest('form').submit();
+}
+
+// Open correct view from URL param
+window.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var v = params.get('view');
+  if (v) showView(v);
+
+  // Renumber S.No across all rows in order and quote tables
+  ['view-orders', 'view-quotes'].forEach(function(panelId) {
+    var panel = document.getElementById(panelId);
+    if (!panel) return;
+    var rows = panel.querySelectorAll('table.rec tbody tr:not(.empty-row)');
+    rows.forEach(function(row, i) {
+      var firstTd = row.querySelector('td');
+      if (firstTd) firstTd.textContent = i + 1;
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Receipt {{ invoice.invoice_number }} — RS Digitizing</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--sky-500:#0ea5e9;--sky-600:#0284c7;--ink:#1a2340;--muted:#64748b;--line:#dbeafe;--green:#16a34a;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;color:var(--ink);background:#eef6fb;padding:30px 16px;}
+    .sheet{max-width:800px;margin:0 auto;background:#fff;border-radius:14px;padding:44px 48px;
+      box-shadow:0 10px 40px rgba(14,165,233,.1);}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;}
+    .brand{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;color:var(--sky-600);}
+    .brand small{display:block;font-family:'DM Sans',sans-serif;font-weight:400;font-size:12px;color:var(--muted);margin-top:2px;}
+    .meta{text-align:right;font-size:13.5px;}
+    .meta .row{margin-bottom:3px;}
+    .meta .lbl{color:var(--muted);}
+
+    .paid-banner{display:flex;align-items:center;gap:10px;background:rgba(22,163,74,.08);
+      border:1px solid rgba(22,163,74,.25);color:var(--green);border-radius:10px;
+      padding:12px 16px;font-weight:600;font-size:15px;margin-bottom:30px;}
+
+    .billto{margin-bottom:30px;}
+    .billto .lbl{font-size:11px;letter-spacing:.06em;color:var(--sky-600);font-weight:600;margin-bottom:6px;}
+    .billto div{font-size:14px;line-height:1.5;}
+
+    table{width:100%;border-collapse:collapse;margin-bottom:6px;}
+    thead th{text-align:left;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+      padding:8px 6px;border-bottom:2px solid var(--line);}
+    thead th.num{text-align:right;}
+    tbody td{padding:9px 6px;border-bottom:1px solid var(--line);font-size:14px;}
+    tbody td.num{text-align:right;}
+
+    .totals{width:280px;margin-left:auto;margin-top:14px;font-size:14px;}
+    .totals .row{display:flex;justify-content:space-between;padding:5px 0;}
+    .totals .row.due{border-top:2px solid var(--line);margin-top:6px;padding-top:10px;font-weight:600;font-size:16px;color:var(--green);}
+
+    .notes{margin-top:26px;font-size:13px;color:var(--muted);}
+    .actions{max-width:800px;margin:0 auto 14px;display:flex;justify-content:flex-end;gap:10px;}
+    .btn{background:var(--sky-500);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-size:13.5px;
+      cursor:pointer;text-decoration:none;font-family:inherit;}
+    @media print{ body{background:#fff;padding:0;} .actions{display:none;} .sheet{box-shadow:none;} }
+  </style>
+</head>
+<body>
+  <div class="actions">
+    <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+  <div class="sheet">
+    <div class="top">
+      <div class="brand" style="display:flex;align-items:center;gap:10px;">
+        <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitize" style="height:44px;width:auto;display:block;"/>
+        <span>RS Digitizing
+          <small>Embroidery Digitizing &amp; Vector Printing · Tiruppur, Tamil Nadu, India</small>
+        </span>
+      </div>
+      <div class="meta">
+        <div class="row"><span class="lbl">Receipt No:</span> {{ invoice.invoice_number }}</div>
+        <div class="row"><span class="lbl">Invoice Date:</span> {{ invoice.invoice_date }}</div>
+        <div class="row"><span class="lbl">Paid On:</span> {{ invoice.paid_at|date:"Y-m-d" }}</div>
+      </div>
+    </div>
+
+    <div class="paid-banner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+      Payment received in full — thank you!
+    </div>
+
+    <div class="billto">
+      <div class="lbl">RECEIVED FROM</div>
+      <div>{{ invoice.bill_to_name|default:invoice.user.get_full_name }}</div>
+      <div>{{ invoice.bill_to_company }}</div>
+      <div>{{ invoice.bill_to_address }}</div>
+      <div>{{ invoice.bill_to_contact|default:invoice.user.email }}</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>S.No</th><th>Description</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Total</th></tr>
+      </thead>
+      <tbody>
+        {% for item in invoice.items.all %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ item.description }}</td>
+          <td class="num">{{ item.qty }}</td>
+          <td class="num">Rs.{{ item.unit_price }}</td>
+          <td class="num">Rs.{{ item.total }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">No line items</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div class="row"><span>Subtotal</span><span>Rs.{{ invoice.subtotal }}</span></div>
+      <div class="row"><span>Discount</span><span>Rs.{{ invoice.discount }}</span></div>
+      <div class="row"><span>Subtotal Less Discount</span><span>Rs.{{ invoice.subtotal_less_discount }}</span></div>
+      <div class="row"><span>Tax Rate</span><span>{{ invoice.tax_rate }}%</span></div>
+      <div class="row"><span>Total Tax</span><span>Rs.{{ invoice.total_tax }}</span></div>
+      <div class="row"><span>Shipping / Handling</span><span>Rs.{{ invoice.shipping }}</span></div>
+      <div class="row due"><span>Amount Paid</span><span>Rs.{{ invoice.balance_due }}</span></div>
+    </div>
+
+    {% if invoice.notes %}
+    <div class="notes"><strong>Notes:</strong> {{ invoice.notes }}</div>
+    {% endif %}
+  </div>
+</body>
+</html>

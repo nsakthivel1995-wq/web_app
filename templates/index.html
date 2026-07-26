@@ -1,0 +1,1261 @@
+{% load static %}
+<!--
+  ============================================================
+  RS Digitize — Main Website
+  © 2026 RS Digitize. All rights reserved.
+  India.
+  Unauthorized reproduction or redistribution of this page,
+  its design, content, or code is strictly prohibited.
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RS Digitize — Embroidery & Vector Printing Studio</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="RS Digitize — Professional embroidery digitizing and vector printing studio in India. Expert logo digitizing, 3D puff embroidery, screen printing, and vector art services." />
+  <meta name="keywords" content="embroidery digitizing, vector printing, logo digitizing, 3D puff embroidery, screen printing, vinyl cutting, India, RS Digitize" />
+  <meta name="author" content="RS Digitize" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rsdigitizing.com/" />
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rsdigitizing.com/" />
+  <meta property="og:title" content="RS Digitize — Embroidery & Vector Printing Studio" />
+  <meta property="og:description" content="Professional embroidery digitizing and vector printing studio in India. Precision. Speed. Quality." />
+  <meta property="og:locale" content="en_IN" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="RS Digitize — Embroidery & Vector Printing Studio" />
+  <meta name="twitter:description" content="Professional embroidery digitizing and vector printing studio in India." />
+  <!-- Copyright -->
+  <meta name="copyright" content="© 2026 RS Digitize. All rights reserved." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky-50: #f0f9ff;
+      --sky-100: #e0f2fe;
+      --sky-200: #bae6fd;
+      --sky-300: #7dd3fc;
+      --sky-400: #38bdf8;
+      --sky-500: #0ea5e9;
+      --sky-600: #0284c7;
+      --blush: #fce7f3;
+      --lavender: #ede9fe;
+      --mint: #d1fae5;
+      --gold: #d4a017;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f8fbff;
+      color: #1a2340;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor-dot {
+      width: 8px; height: 8px;
+      background: var(--sky-400);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transition: transform 0.1s ease;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 2px solid rgba(14, 165, 233, 0.5);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    }
+    .cursor-ring.hovered {
+      width: 52px; height: 52px;
+      background: rgba(14, 165, 233, 0.08);
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(186,230,253,0.4);
+      position: fixed; top: 0; width: 100%;
+      z-index: 1000;
+      transition: all 0.4s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 4px 30px rgba(14,165,233,0.1);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7, #7dd3fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.05em;
+    }
+    .nav-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: #334155;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1.5px;
+      background: linear-gradient(90deg, var(--sky-400), var(--sky-600));
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-link:hover { color: var(--sky-600); }
+    .nav-link:hover::after { width: 100%; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: white;
+      padding: 0.65rem 1.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(14,165,233,0.35);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+    .btn-primary:hover::before { width: 300px; height: 300px; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(14,165,233,0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--sky-600);
+      padding: 0.65rem 1.8rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      border: 1.5px solid rgba(14,165,233,0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      backdrop-filter: blur(10px);
+    }
+    .btn-outline:hover {
+      background: rgba(14,165,233,0.08);
+      border-color: var(--sky-500);
+      transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 30%, #f8fbff 60%, #fce7f3 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .hero-mesh {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(14,165,233,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,165,233,0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(186,230,253,0.6);
+      border-radius: 50px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sky-600);
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+    .pulse-dot {
+      width: 8px; height: 8px;
+      background: var(--sky-400);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.8); }
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 600;
+      line-height: 1.12;
+      color: #0f172a;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title .accent {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7, #7dd3fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: italic;
+    }
+    .hero-subtitle {
+      color: #475569;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 3rem;
+      align-items: center;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 600;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: 0.72rem; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem;
+    }
+
+    /* Floating elements */
+    .float-el {
+      position: absolute; pointer-events: none;
+      animation: floatEl var(--dur, 10s) ease-in-out infinite;
+    }
+    @keyframes floatEl {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      33%      { transform: translateY(-18px) rotate(4deg); }
+      66%      { transform: translateY(10px) rotate(-3deg); }
+    }
+
+    /* Glass card */
+    .glass-card {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(186,230,253,0.5);
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(14,165,233,0.1), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+    /* Section labels */
+    .section-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sky-500);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    /* Service cards */
+    .service-card {
+      background: white;
+      border: 1px solid rgba(186,230,253,0.4);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sky-400), var(--sky-600));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(14,165,233,0.15);
+      border-color: rgba(56,189,248,0.3);
+    }
+    .service-icon {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--sky-100), var(--sky-200));
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Process steps */
+    .process-step {
+      display: flex; gap: 1.5rem; align-items: flex-start;
+    }
+    .step-num {
+      min-width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--sky-400), var(--sky-600));
+      color: white;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 600;
+    }
+
+    /* Testimonial cards */
+    .testimonial-card {
+      background: white;
+      border: 1px solid rgba(186,230,253,0.4);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(14,165,233,0.12);
+    }
+    .stars { color: #f59e0b; font-size: 1rem; letter-spacing: 2px; }
+
+    /* Contact */
+    .contact-input {
+      width: 100%;
+      background: rgba(248,251,255,0.85);
+      border: 1.5px solid rgba(186,230,253,0.7);
+      border-radius: 14px;
+      padding: 0.84rem 1.15rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.94rem;
+      color: #1a2340;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+    .contact-input:focus {
+      border-color: var(--sky-400);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(56,189,248,0.1);
+    }
+    .contact-label {
+      display: block;
+      font-size: 0.76rem; font-weight: 500;
+      letter-spacing: 0.07em; color: #64748b;
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+
+    /* Page loader */
+    #pageLoader {
+      position: fixed; inset: 0; z-index: 99999;
+      background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem;
+      transition: opacity 0.6s ease;
+    }
+    #pageLoader.hidden { opacity: 0; pointer-events: none; }
+    .loader-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem; font-weight: 600;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: loaderPulse 1.4s ease-in-out infinite;
+    }
+    @keyframes loaderPulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+    .loader-bar {
+      width: 200px; height: 2px;
+      background: rgba(186,230,253,0.5);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .loader-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sky-400), var(--sky-600));
+      animation: loaderFill 1.8s ease-in-out forwards;
+    }
+    @keyframes loaderFill { from{width:0} to{width:100%} }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; flex-direction: column;
+      gap: 5px; cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: #334155; border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .mobile-menu {
+      position: fixed; top: 70px; left: 0; right: 0;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(186,230,253,0.4);
+      padding: 1.5rem;
+      display: none; flex-direction: column; gap: 1rem;
+      z-index: 999;
+      transform: translateY(-10px); opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .mobile-menu.open {
+      display: flex; opacity: 1; transform: translateY(0);
+    }
+
+    /* Tabs for service categories */
+    .tab-btn {
+      padding: 0.55rem 1.4rem;
+      border-radius: 50px;
+      border: 1.5px solid rgba(186,230,253,0.6);
+      font-size: 0.82rem; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+      color: #64748b;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: white; border-color: transparent;
+      box-shadow: 0 4px 16px rgba(14,165,233,0.3);
+    }
+
+    /* Chip tags */
+    .chip {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--sky-100);
+      color: var(--sky-600);
+      border-radius: 50px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    /* Scroll animation */
+    @keyframes scrollDot {
+      0%,100% { opacity: 1; transform: scaleY(1); }
+      50%      { opacity: 0.3; transform: scaleY(0.6); }
+    }
+
+    /* Timeline */
+    .timeline-item { position: relative; padding-left: 2rem; }
+    .timeline-dot {
+      position: absolute; left: 0; top: 4px;
+      width: 10px; height: 10px;
+      background: var(--sky-400);
+      border-radius: 50%;
+      border: 2px solid var(--sky-200);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute; left: 4px; top: 18px;
+      width: 2px; height: calc(100% + 1.5rem);
+      background: linear-gradient(to bottom, var(--sky-200), transparent);
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, #0f172a, #1a2340);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .desktop-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Page Loader -->
+<div id="pageLoader">
+  <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitize" style="height:90px;width:auto;margin:0 auto 0.75rem;display:block;"/>
+  <div style="font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:#94a3b8;">Embroidery & Vector Studio</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="{% url 'index' %}" class="nav-logo" style="display:flex;align-items:center;">
+      <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitize" style="height:56px;width:auto;display:block;"/>
+    </a>
+
+    <div class="flex items-center gap-8 desktop-nav">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#process" class="nav-link">Process</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+
+    <div class="flex items-center gap-3" id="authNav">
+      <a href="{% url 'auth' %}" class="btn-outline" style="padding:0.5rem 1.2rem; font-size:0.8rem;">Login</a>
+      <a href="{% url 'auth' %}#register" class="btn-primary" style="padding:0.5rem 1.2rem; font-size:0.8rem;">Get a Quote ✦</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" class="nav-link" onclick="toggleMobileMenu()">Home</a>
+  <a href="#services" class="nav-link" onclick="toggleMobileMenu()">Services</a>
+  <a href="#process" class="nav-link" onclick="toggleMobileMenu()">Process</a>
+  <a href="#about" class="nav-link" onclick="toggleMobileMenu()">About</a>
+  <a href="#testimonials" class="nav-link" onclick="toggleMobileMenu()">Reviews</a>
+  <a href="#contact" class="nav-link" onclick="toggleMobileMenu()">Contact</a>
+  <div style="display:flex;gap:0.75rem;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid rgba(186,230,253,0.4);">
+    <a href="{% url 'auth' %}" class="btn-outline" style="font-size:0.8rem;">Login</a>
+    <a href="{% url 'auth' %}#register" class="btn-primary" style="font-size:0.8rem;">Get a Quote ✦</a>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-mesh"></div>
+
+  <!-- Floating decorative blobs -->
+  <div class="float-el" style="--dur:9s;width:120px;height:120px;background:linear-gradient(135deg,rgba(186,230,253,0.6),rgba(224,242,254,0.3));top:15%;left:5%;border-radius:30% 70% 70% 30%/30% 30% 70% 70%;"></div>
+  <div class="float-el" style="--dur:12s;animation-delay:-4s;width:80px;height:80px;background:rgba(252,231,243,0.7);top:60%;left:2%;border-radius:50%;"></div>
+  <div class="float-el" style="--dur:10s;animation-delay:-2s;width:60px;height:60px;background:rgba(237,233,254,0.7);top:25%;right:8%;border-radius:50%;"></div>
+  <div class="float-el" style="--dur:14s;animation-delay:-6s;width:100px;height:100px;background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(186,230,253,0.3));top:70%;right:12%;border-radius:60% 40% 40% 60%;"></div>
+  <div style="position:absolute;top:0;right:0;width:500px;height:100vh;opacity:0.05;background:repeating-linear-gradient(45deg,#0ea5e9 0,#0ea5e9 1px,transparent 0,transparent 50%);background-size:20px 20px;pointer-events:none;"></div>
+
+  <div class="max-w-7xl mx-auto px-6 w-full relative z-10 pt-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+      <div>
+        <div class="hero-tag" data-aos="fade-down" data-aos-delay="200">
+          <span class="pulse-dot"></span>
+          Professional Digitizing & Printing Studio
+        </div>
+
+        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="300">
+          Precision <span class="accent">Stitched</span><br/>
+          Into Every<br/>
+          <span class="accent">Thread & Print</span>
+        </h1>
+
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="450">
+          We bridge the gap between creative artwork and physical manufacturing — transforming your designs into high-performance, machine-ready embroidery and vector files optimized for clean sewing, crisp printing, and zero production delays.
+        </p>
+
+        <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="550">
+          <a href="#contact" class="btn-primary" style="font-size:0.9rem;padding:0.8rem 2rem;">
+            Get a Free Quote ✦
+          </a>
+          <a href="#services" class="btn-outline" style="font-size:0.9rem;padding:0.8rem 2rem;">
+            View Our Work
+          </a>
+        </div>
+
+        <div class="hero-stats" data-aos="fade-up" data-aos-delay="650">
+          <div class="stat-item">
+            <div class="stat-num">5000+</div>
+            <div class="stat-label">Designs Digitized</div>
+          </div>
+          <div style="width:1px;background:rgba(186,230,253,0.5);height:40px;"></div>
+          <div class="stat-item">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div style="width:1px;background:rgba(186,230,253,0.5);height:40px;"></div>
+          <div class="stat-item">
+            <div class="stat-num">98%</div>
+            <div class="stat-label">Client Satisfaction</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual -->
+      <div class="relative" data-aos="fade-left" data-aos-delay="400">
+        <div class="glass-card p-8 relative" style="max-width:440px;margin:auto;">
+          <div style="background:linear-gradient(135deg,#bae6fd,#e0f2fe,#fce7f3);border-radius:16px;height:300px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+            <div style="font-size:6rem;opacity:0.18;position:absolute;top:-20px;right:-20px;">🧵</div>
+            <div style="font-size:6rem;opacity:0.1;position:absolute;bottom:-10px;left:-10px;">🖨️</div>
+            <div style="text-align:center;position:relative;z-index:1;">
+              <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitize" style="height:100px;width:auto;margin:0 auto 0.75rem;display:block;"/>
+              <div style="font-size:0.72rem;color:#64748b;letter-spacing:0.15em;text-transform:uppercase;margin-top:0.4rem;">Embroidery & Vector Studio</div>
+            </div>
+          </div>
+
+          <!-- Badges -->
+          <div class="glass-card" style="position:absolute;bottom:-20px;left:-20px;padding:0.9rem 1.2rem;border-radius:14px;display:flex;align-items:center;gap:0.65rem;">
+            <div style="font-size:1.3rem;">⚡</div>
+            <div>
+              <div style="font-size:0.65rem;color:#64748b;letter-spacing:0.05em;text-transform:uppercase;">Fast Turnaround</div>
+              <div style="font-size:0.82rem;font-weight:600;color:#0f172a;">24–48 Hr Delivery</div>
+            </div>
+          </div>
+          <div class="glass-card" style="position:absolute;top:-15px;right:-15px;padding:0.7rem 1rem;border-radius:12px;">
+            <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">Formats Supported</div>
+            <div style="font-size:0.82rem;font-weight:600;color:#0284c7;">DST · PES · EMB · AI · EPS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0.5;">
+    <div style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#64748b;">Scroll</div>
+    <div style="width:1.5px;height:40px;background:linear-gradient(to bottom,var(--sky-400),transparent);animation:scrollDot 2s ease-in-out infinite;"></div>
+  </div>
+</section>
+
+<!-- Wave -->
+<div style="margin-top:-2px;background:white;">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:80px;display:block;">
+    <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="white"/>
+  </svg>
+</div>
+
+<!-- ===== SERVICES ===== -->
+<section id="services" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16" data-aos="fade-up">
+      <p class="section-tag">Who We Serve & Core Capabilities</p>
+      <h2 class="section-title">Our <span class="italic">Signature</span> Services</h2>
+      <p style="color:#64748b;margin-top:1rem;max-width:540px;margin-left:auto;margin-right:auto;line-height:1.75;">We don't just trace artwork; we analyze it. Our expert team builds production-ready files tailored to your specific machinery and materials, ensuring your final products look spectacular.</p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div style="display:flex;gap:0.75rem;justify-content:center;margin-bottom:3rem;flex-wrap:wrap;" data-aos="fade-up" data-aos-delay="100">
+      <button class="tab-btn active" onclick="filterServices('all', this)">All Services</button>
+      <button class="tab-btn" onclick="filterServices('embroidery', this)">🧵 Embroidery</button>
+      <button class="tab-btn" onclick="filterServices('vector', this)">🖨️ Vector Printing</button>
+      <button class="tab-btn" onclick="filterServices('application', this)">👕 Applications</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="servicesGrid">
+
+      <!-- Embroidery: Logo Digitizing -->
+      <div class="service-card" data-cat="embroidery" data-aos="fade-up" data-aos-delay="100">
+        <div class="service-icon">🎯</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Embroidery</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Logo Digitizing</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Converting standard images into flawless machine-ready files using industry-leading software — Wilcom, Tajima Pulse, and Melco — for left-chest logos, jacket backs, and full front designs.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+          <span class="chip">DST</span><span class="chip">PES</span><span class="chip">EMB</span><span class="chip">JEF</span>
+        </div>
+      </div>
+
+      <!-- Embroidery: 3D Puff -->
+      <div class="service-card" data-cat="embroidery" data-aos="fade-up" data-aos-delay="200">
+        <div class="service-icon">✦</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Embroidery</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">3D Puff Embroidery</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Digitized with heavy underlay mapping to cleanly cut the underlying foam and increased satin density to fully encapsulate it — a premium, high-dimension raised effect that holds its shape through heavy commercial laundering.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:gap:0.4rem;gap:0.4rem;">
+          <span class="chip">Headwear</span><span class="chip">Caps</span><span class="chip">Beanies</span>
+        </div>
+      </div>
+
+      <!-- Embroidery: Cap Digitizing -->
+      <div class="service-card" data-cat="embroidery" data-aos="fade-up" data-aos-delay="300">
+        <div class="service-icon">🧢</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Embroidery</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Cap Digitizing</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Digitized "center-out" and "bottom-up" specifically for curved cap frames — eliminating fabric puckering, registration shifts, and bird-nesting for a clean sew every time.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+          <span class="chip">Structured</span><span class="chip">Unstructured</span><span class="chip">Trucker</span>
+        </div>
+      </div>
+
+      <!-- Vector: Screen Printing -->
+      <div class="service-card" data-cat="vector" data-aos="fade-up" data-aos-delay="100">
+        <div class="service-icon">🖼️</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Vector Printing</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Screen Printing</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Artwork prepped for physical screen exposure with correct line thickness, clean traps, and bleeds — preventing washed-out details and ensuring a flawless hit on press.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+          <span class="chip">Bulk Orders</span><span class="chip">T-Shirts</span><span class="chip">Hoodies</span>
+        </div>
+      </div>
+
+      <!-- Vector: Vinyl Cutting -->
+      <div class="service-card" data-cat="vector" data-aos="fade-up" data-aos-delay="200">
+        <div class="service-icon">✂️</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Vector Printing</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Vinyl Cutting & HTV</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Clean vector paths with reduced anchor points and closed, non-intersecting cut lines — so your plotter runs smoothly and the final vinyl weeds fast and easy.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+          <span class="chip">HTV</span><span class="chip">Decals</span><span class="chip">Signage</span>
+        </div>
+      </div>
+
+      <!-- Vector: Sticker & Digital -->
+      <div class="service-card" data-cat="vector" data-aos="fade-up" data-aos-delay="300">
+        <div class="service-icon">🖨️</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Vector Printing</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Digital Printing & Stickers</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Artwork optimized for wide-format dye-sublimation with precise color management and expanded gamuts, so gradients stay vibrant with zero pixelation on full-bleed prints.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+          <span class="chip">Stickers</span><span class="chip">Labels</span><span class="chip">Promos</span>
+        </div>
+      </div>
+
+      <!-- Application: Corporate -->
+      <div class="service-card" data-cat="application" data-aos="fade-up" data-aos-delay="100">
+        <div class="service-icon">👔</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Application</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Corporate Uniforms</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Strict adherence to brand guidelines with exact color-mapping and clean paths that replicate official typography and geometry — consistent across every uniform in your merchandising line.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+          <span class="chip">Bulk B2B</span><span class="chip">Polos</span><span class="chip">Workwear</span>
+        </div>
+      </div>
+
+      <!-- Application: Sports -->
+      <div class="service-card" data-cat="application" data-aos="fade-up" data-aos-delay="200">
+        <div class="service-icon">⚽</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Application</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Sports Uniforms</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">Batch name, number, and roster changes applied across your entire team sheet with uniform font tracking and alignment — zero typographical errors, even on large group orders.</p>
+        <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
+          <span class="chip">Jerseys</span><span class="chip">Kits</span><span class="chip">Custom Names</span>
+        </div>
+      </div>
+
+      <!-- Application: Custom Designs -->
+      <div class="service-card" data-cat="application" data-aos="fade-up" data-aos-delay="300" style="background:linear-gradient(135deg,rgba(14,165,233,0.06),rgba(186,230,253,0.12));border-color:rgba(14,165,233,0.25);">
+        <div class="service-icon" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);">🎨</div>
+        <span class="chip" style="margin-bottom:0.75rem;display:inline-block;">Application</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:0.75rem;">Custom Design Work</h3>
+        <p style="color:#64748b;line-height:1.75;font-size:0.92rem;">From redrawing low-res raster art into mathematically perfect vectors to placing your finished artwork on realistic digital apparel mockups — we take your concept from sketch to sellable file.</p>
+        <a href="#contact" class="btn-primary" style="margin-top:1.5rem;display:inline-block;font-size:0.82rem;padding:0.6rem 1.4rem;">Start a Project ✦</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Wave -->
+<div style="margin-top:-2px;background:white;">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:80px;display:block;">
+    <path d="M0,40 C360,0 720,80 1080,40 C1260,20 1380,60 1440,40 L1440,80 L0,80 Z" fill="#f0f9ff"/>
+  </svg>
+</div>
+
+<!-- ===== PROCESS ===== -->
+<section id="process" class="py-24" style="background:#f0f9ff;">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16" data-aos="fade-up">
+      <p class="section-tag">How We Work</p>
+      <h2 class="section-title">Our <span class="italic">4-Step</span> Quality Process</h2>
+      <p style="color:#64748b;margin-top:1rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.75;">Customer satisfaction is our beginning and our end. Every single file passes through a rigorous internal review before it ever reaches your inbox.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="glass-card p-8" data-aos="fade-up" data-aos-delay="100">
+        <div class="step-num" style="margin-bottom:1.25rem;">01</div>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:0.75rem;">Intake & Technical Analysis</h4>
+        <p style="color:#64748b;font-size:0.88rem;line-height:1.7;">We review your artwork, requested dimensions, placement (caps, jackets, front), and target fabrics.</p>
+      </div>
+      <div class="glass-card p-8" data-aos="fade-up" data-aos-delay="200">
+        <div class="step-num" style="margin-bottom:1.25rem;">02</div>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:0.75rem;">Fabric-Specific Digitizing</h4>
+        <p style="color:#64748b;font-size:0.88rem;line-height:1.7;">Our team applies custom stitch densities, underlays, and patterns (Satin, Tatami, Run) engineered specifically for your garment type.</p>
+      </div>
+      <div class="glass-card p-8" data-aos="fade-up" data-aos-delay="300">
+        <div class="step-num" style="margin-bottom:1.25rem;">03</div>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:0.75rem;">Double-Check Quality Control</h4>
+        <p style="color:#64748b;font-size:0.88rem;line-height:1.7;">Our dedicated QA department inspects the file for registration accuracy, pulling/pushing compensation, and minimal thread breaks.</p>
+      </div>
+      <div class="glass-card p-8" data-aos="fade-up" data-aos-delay="400">
+        <div class="step-num" style="margin-bottom:1.25rem;">04</div>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;margin-bottom:0.75rem;">On-Garment Readiness</h4>
+        <p style="color:#64748b;font-size:0.88rem;line-height:1.7;">Your files are delivered in your required format, fully optimized and ready to stitch or print perfectly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Wave -->
+<div style="background:#f0f9ff;margin-bottom:-2px;">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:80px;display:block;">
+    <path d="M0,40 C240,0 480,80 720,40 C960,0 1200,80 1440,40 L1440,80 L0,80 Z" fill="white"/>
+  </svg>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<section id="about" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+      <div data-aos="fade-right">
+        <p class="section-tag">Our Story</p>
+        <h2 class="section-title">Built on <span class="italic">Precision</span> & Craft</h2>
+        <p style="color:#64748b;margin-top:1.5rem;line-height:1.85;">At RS Digitize, we bridge the gap between creative artwork and flawless physical production. Founded in India — we specialize in commercial-grade embroidery digitizing and crisp vector art conversion, transforming designs into clean, high-performance files optimized for smooth manufacturing. Whether it's intricate left-chest logos, complex jacket backs, or scalable vector graphics, our expert team ensures minimal thread breaks, perfect stitch registration, and sharp, infinitely scalable paths.</p>
+
+        <div style="margin-top:3rem;display:flex;flex-direction:column;gap:2rem;">
+          <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+            <div class="timeline-dot"></div>
+            <div style="font-size:0.75rem;color:var(--sky-500);font-weight:600;letter-spacing:0.1em;margin-bottom:0.3rem;">2014</div>
+            <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;margin-bottom:0.4rem;">Founded in India</h4>
+            <p style="font-size:0.88rem;color:#64748b;line-height:1.7;">Started as a small digitizing studio serving local garment manufacturers in the textile hub of India.</p>
+          </div>
+          <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+            <div class="timeline-dot"></div>
+            <div style="font-size:0.75rem;color:var(--sky-500);font-weight:600;letter-spacing:0.1em;margin-bottom:0.3rem;">2018</div>
+            <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;margin-bottom:0.4rem;">Expanded to Vector & Print</h4>
+            <p style="font-size:0.88rem;color:#64748b;line-height:1.7;">Added screen printing, vinyl cutting, and digital printing services to offer a complete branding solution.</p>
+          </div>
+          <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
+            <div class="timeline-dot"></div>
+            <div style="font-size:0.75rem;color:var(--sky-500);font-weight:600;letter-spacing:0.1em;margin-bottom:0.3rem;">2022</div>
+            <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;margin-bottom:0.4rem;">Corporate & Sports Clients</h4>
+            <p style="font-size:0.88rem;color:#64748b;line-height:1.7;">Onboarded corporate uniform programs and regional sports clubs, scaling our capacity and turnaround speed.</p>
+          </div>
+          <div class="timeline-item" data-aos="fade-up" data-aos-delay="400">
+            <div class="timeline-dot"></div>
+            <div style="font-size:0.75rem;color:var(--sky-500);font-weight:600;letter-spacing:0.1em;margin-bottom:0.3rem;">2025</div>
+            <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;margin-bottom:0.4rem;">5000+ Designs Delivered</h4>
+            <p style="font-size:0.88rem;color:#64748b;line-height:1.7;">Now serving clients across India with online file submission, 24–48 hr delivery, and a growing client portal.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- About visual -->
+      <div data-aos="fade-left" data-aos-delay="200">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+          <div class="glass-card" style="padding:1.8rem;grid-column:span 2;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:#334155;line-height:1.7;">"Every logo deserves to be reproduced with the same pride its creator felt designing it — whether stitched on a jersey or printed on a signboard."</div>
+            <div style="margin-top:1rem;font-size:0.78rem;color:var(--sky-500);letter-spacing:0.1em;text-transform:uppercase;">— RS Digitize Studio</div>
+          </div>
+          <div class="glass-card" style="padding:1.8rem;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;color:var(--sky-600);">5000+</div>
+            <div style="font-size:0.78rem;color:#64748b;text-transform:uppercase;letter-spacing:0.08em;margin-top:0.3rem;">Designs Digitized</div>
+          </div>
+          <div class="glass-card" style="padding:1.8rem;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;color:var(--sky-600);">10+</div>
+            <div style="font-size:0.78rem;color:#64748b;text-transform:uppercase;letter-spacing:0.08em;margin-top:0.3rem;">Years of Craft</div>
+          </div>
+          <div class="glass-card" style="padding:1.8rem;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;color:var(--sky-600);">24hr</div>
+            <div style="font-size:0.78rem;color:#64748b;text-transform:uppercase;letter-spacing:0.08em;margin-top:0.3rem;">Average Turnaround</div>
+          </div>
+          <div class="glass-card" style="padding:1.8rem;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;color:var(--sky-600);">20+</div>
+            <div style="font-size:0.78rem;color:#64748b;text-transform:uppercase;letter-spacing:0.08em;margin-top:0.3rem;">File Formats</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Wave -->
+<div style="margin-top:-2px;background:white;">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:80px;display:block;">
+    <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,80 L0,80 Z" fill="#f0f9ff"/>
+  </svg>
+</div>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section id="testimonials" class="py-24" style="background:#f0f9ff;">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16" data-aos="fade-up">
+      <p class="section-tag">Client Reviews</p>
+      <h2 class="section-title">What Our <span class="italic">Clients</span> Say</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="stars">★★★★★</div>
+        <p style="color:#475569;line-height:1.8;font-size:0.92rem;margin-top:1rem;margin-bottom:1.5rem;">"RS Digitize turned our rough logo sketch into a perfect embroidery file overnight. The 3D puff result on our team caps was exactly what we needed. Highly recommend!"</p>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:42px;height:42px;background:linear-gradient(135deg,#bae6fd,#38bdf8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:#0284c7;">AR</div>
+          <div>
+            <div style="font-weight:500;font-size:0.9rem;color:#1a2340;">Arjun R.</div>
+            <div style="font-size:0.75rem;color:#94a3b8;">Sports Club Manager, Chennai</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="stars">★★★★★</div>
+        <p style="color:#475569;line-height:1.8;font-size:0.92rem;margin-top:1rem;margin-bottom:1.5rem;">"We ordered 200 polo shirts with logo embroidery for our corporate team. The files were ready in 24 hours, perfectly sized and clean. The factory ran them without a single issue."</p>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:42px;height:42px;background:linear-gradient(135deg,#d1fae5,#10b981);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:#065f46;">SK</div>
+          <div>
+            <div style="font-weight:500;font-size:0.9rem;color:#1a2340;">Santhosh K.</div>
+            <div style="font-size:0.75rem;color:#94a3b8;">Operations Head, Coimbatore</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="stars">★★★★★</div>
+        <p style="color:#475569;line-height:1.8;font-size:0.92rem;margin-top:1rem;margin-bottom:1.5rem;">"Vector conversion was spot on — crisp edges, correct colours, and they even cleaned up the original file for free. Print came out flawless on vinyl. Will use RS Digitize for all future work."</p>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:42px;height:42px;background:linear-gradient(135deg,#fce7f3,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:#9d174d;">PM</div>
+          <div>
+            <div style="font-weight:500;font-size:0.9rem;color:#1a2340;">Preethi M.</div>
+            <div style="font-size:0.75rem;color:#94a3b8;">Small Business Owner, India</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Wave -->
+<div style="background:#f0f9ff;margin-bottom:-2px;">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:80px;display:block;">
+    <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="white"/>
+  </svg>
+</div>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+      <div data-aos="fade-right">
+        <p class="section-tag">Get in Touch</p>
+        <h2 class="section-title">Request a <span class="italic">Free Quote</span></h2>
+        <p style="color:#64748b;margin-top:1rem;line-height:1.85;">Have a logo, design, or project in mind? Upload your artwork and tell us what you need — we'll get back to you within a few hours with a quote and timeline.</p>
+
+        <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:1.5rem;">
+          <div style="display:flex;align-items:flex-start;gap:1rem;">
+            <div style="width:44px;height:44px;background:var(--sky-100);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">📍</div>
+            <div>
+              <div style="font-weight:500;font-size:0.9rem;margin-bottom:0.2rem;">Location</div>
+              <div style="color:#64748b;font-size:0.88rem;">India — Garment Capital</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:1rem;">
+            <div style="width:44px;height:44px;background:var(--sky-100);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">⏱️</div>
+            <div>
+              <div style="font-weight:500;font-size:0.9rem;margin-bottom:0.2rem;">Turnaround Time</div>
+              <div style="color:#64748b;font-size:0.88rem;">24–48 hours for standard orders · Rush delivery available</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:1rem;">
+            <div style="width:44px;height:44px;background:var(--sky-100);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">📁</div>
+            <div>
+              <div style="font-weight:500;font-size:0.9rem;margin-bottom:0.2rem;">Accepted File Formats</div>
+              <div style="color:#64748b;font-size:0.88rem;">JPEG, PNG, PDF, AI, EPS, SVG, CDR, PSD</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:1rem;">
+            <div style="width:44px;height:44px;background:var(--sky-100);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">💬</div>
+            <div>
+              <div style="font-weight:500;font-size:0.9rem;margin-bottom:0.2rem;">WhatsApp / Email</div>
+              <div style="color:#64748b;font-size:0.88rem;">Reach us directly for bulk orders and corporate inquiries</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div data-aos="fade-left" data-aos-delay="200">
+        <div class="glass-card" style="padding:2.5rem;">
+          <form id="contactForm" onsubmit="submitContact(event)">
+            {% csrf_token %}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+              <div>
+                <label class="contact-label">First Name</label>
+                <input class="contact-input" type="text" id="cfFirst" name="first_name" placeholder="Ravi" required/>
+              </div>
+              <div>
+                <label class="contact-label">Last Name</label>
+                <input class="contact-input" type="text" id="cfLast" name="last_name" placeholder="Kumar" required/>
+              </div>
+            </div>
+
+            <div style="margin-bottom:1rem;">
+              <label class="contact-label">Email Address</label>
+              <input class="contact-input" type="email" id="cfEmail" name="email" placeholder="ravi@company.com" required/>
+            </div>
+
+            <div style="margin-bottom:1rem;">
+              <label class="contact-label">Phone Number</label>
+              <input class="contact-input" type="tel" id="cfPhone" name="phone" placeholder="9876543210" required/>
+            </div>
+
+            <div style="margin-bottom:1rem;">
+              <label class="contact-label">Service Required</label>
+              <select class="contact-input" id="cfService" name="service" required style="appearance:none;cursor:pointer;">
+                <option value="" disabled selected>Select a service…</option>
+                <option>Logo Digitizing</option>
+                <option>3D Puff Embroidery</option>
+                <option>Cap Digitizing</option>
+                <option>Screen Printing</option>
+                <option>Vinyl Cutting / HTV</option>
+                <option>Digital Printing &amp; Stickers</option>
+                <option>Corporate Uniforms</option>
+                <option>Sports Uniforms</option>
+                <option>Custom Design Work</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:1.5rem;">
+              <label class="contact-label">Project Details</label>
+              <textarea class="contact-input" id="cfMessage" name="message" rows="4" placeholder="Describe your project — garment type, quantity, deadline, any specific requirements…" required style="resize:vertical;"></textarea>
+            </div>
+
+            <div id="cfError" style="display:none;color:#ef4444;font-size:0.82rem;margin-bottom:1rem;padding:0.6rem 1rem;background:rgba(239,68,68,0.08);border-radius:8px;"></div>
+            <div id="cfSuccess" style="display:none;color:#10b981;font-size:0.88rem;margin-bottom:1rem;padding:0.75rem 1rem;background:rgba(16,185,129,0.1);border-radius:10px;font-weight:500;">✓ Thank you! We'll get back to you within a few hours with your quote.</div>
+
+            <button type="submit" class="btn-primary" style="width:100%;font-size:0.92rem;padding:0.9rem;">
+              Send Request ✦
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;" class="footer-grid">
+
+      <div style="grid-column:span 1;">
+        <img src="{% static 'RS_Digitize_Logo.png' %}" alt="RS Digitize" style="height:60px;width:auto;margin-bottom:0.75rem;display:block;background:rgba(255,255,255,0.9);border-radius:8px;padding:0.4rem 0.6rem;"/>
+        <p style="color:#64748b;line-height:1.85;font-size:0.88rem;max-width:260px;">Professional embroidery digitizing and vector printing studio based in India. Precision. Speed. Quality.</p>
+        <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+          <div style="width:34px;height:34px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;" onmouseover="this.style.background='rgba(56,189,248,.15)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">📘</div>
+          <div style="width:34px;height:34px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;" onmouseover="this.style.background='rgba(56,189,248,.15)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">📸</div>
+          <div style="width:34px;height:34px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;" onmouseover="this.style.background='rgba(56,189,248,.15)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">💬</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:1rem;font-weight:500;">Embroidery</div>
+        <div style="display:flex;flex-direction:column;gap:0.55rem;">
+          <a href="#services" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Logo Digitizing</a>
+          <a href="#services" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">3D Puff Embroidery</a>
+          <a href="#services" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Cap Digitizing</a>
+          <a href="#services" style="color:#38bdf8;font-size:0.86rem;text-decoration:none;">Complex Designs ✦</a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:1rem;font-weight:500;">Printing</div>
+        <div style="display:flex;flex-direction:column;gap:0.55rem;">
+          <a href="#services" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Screen Printing</a>
+          <a href="#services" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Vinyl Cutting / HTV</a>
+          <a href="#services" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Digital Printing</a>
+          <a href="#services" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Sticker Work</a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:1rem;font-weight:500;">Quick Links</div>
+        <div style="display:flex;flex-direction:column;gap:0.55rem;">
+          <a href="{% url 'index' %}" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Home</a>
+          <a href="#about" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">About Us</a>
+          <a href="{% url 'auth' %}" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Login</a>
+          <a href="{% url 'auth' %}#register" style="color:#64748b;font-size:0.86rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Register</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+      <p style="color:#475569;font-size:0.82rem;">© 2026 RS Digitize. All rights reserved. Crafted with ♥ in India.</p>
+      <p style="color:#475569;font-size:0.82rem;"><a href="#" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Privacy Policy</a> · <a href="#" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Terms of Service</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  // Page Loader
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('pageLoader').classList.add('hidden');
+    }, 1800);
+  });
+
+  // AOS Init
+  AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 60 });
+
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Mobile menu
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    hamburger.classList.toggle('active');
+  }
+
+  // Close mobile menu on outside click
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !hamburger.contains(e.target)) {
+      menu.classList.remove('open');
+      hamburger.classList.remove('active');
+    }
+  });
+
+  // Custom Cursor
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+  });
+
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.15;
+    ry += (my - ry - 18) * 0.15;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .service-card').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
+  });
+
+  // Service filter tabs
+  function filterServices(cat, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#servicesGrid .service-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 50);
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Contact Form
+  function submitContact(e) {
+    e.preventDefault();
+    const email   = document.getElementById('cfEmail').value.trim();
+    const phone   = document.getElementById('cfPhone').value.replace(/\s/g,'');
+    const err     = document.getElementById('cfError');
+    const success = document.getElementById('cfSuccess');
+    const btn     = e.target.querySelector('button[type="submit"]');
+    err.style.display = 'none';
+    success.style.display = 'none';
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      err.textContent = 'Please enter a valid email address.';
+      err.style.display = 'block'; return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      err.textContent = 'Phone number must be exactly 10 digits.';
+      err.style.display = 'block'; return;
+    }
+
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const formData  = new FormData(document.getElementById('contactForm'));
+
+    btn.textContent = 'Sending...'; btn.disabled = true;
+
+    fetch('/contact/', {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken },
+      body: formData,
+    })
+    .then(r => r.json())
+    .then(data => {
+      btn.textContent = 'Send Request ✦'; btn.disabled = false;
+      if (data.success) {
+        success.style.display = 'block';
+        document.getElementById('contactForm').reset();
+      } else {
+        err.textContent = data.errors ? data.errors.join(' ') : 'Something went wrong. Please try again.';
+        err.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      btn.textContent = 'Send Request ✦'; btn.disabled = false;
+      err.textContent = 'Network error. Please try again.';
+      err.style.display = 'block';
+    });
+  }
+
+  // Auth Nav Check
+  const user = JSON.parse(localStorage.getItem('ac_loggedIn') || 'null');
+  if (user) {
+    document.getElementById('authNav').innerHTML = `
+      <span style="font-size:0.85rem;color:#334155;">Hi, ${user.name.split(' ')[0]} 👋</span>
+      <a href="{% url 'dashboard' %}" class="btn-primary" style="padding:0.5rem 1.2rem;font-size:0.8rem;">Dashboard ✦</a>
+      <button onclick="logoutUser()" class="btn-outline" style="padding:0.5rem 1.2rem;font-size:0.8rem;">Logout</button>
+    `;
+  }
+
+  function logoutUser() {
+    localStorage.removeItem('ac_loggedIn');
+    location.reload();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,659 @@
+{% load static %}
+{% csrf_token %}
+<!--
+  ============================================================
+  RS Digitizing — Authentication (Login / Register)
+  © 2026 RS Digitizing. All rights reserved.
+  Tiruppur, Tamil Nadu, India.
+  Unauthorized reproduction or redistribution of this page,
+  its design, content, or code is strictly prohibited.
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RS Digitizing — Sign In / Register</title>
+  <meta name="description" content="Sign in or create an account with RS Digitizing — Professional embroidery digitizing and vector printing studio in Tiruppur." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="author" content="RS Digitizing" />
+  <meta name="copyright" content="© 2026 RS Digitizing. All rights reserved." />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky-50:  #f0f9ff;
+      --sky-100: #e0f2fe;
+      --sky-200: #bae6fd;
+      --sky-300: #7dd3fc;
+      --sky-400: #38bdf8;
+      --sky-500: #0ea5e9;
+      --sky-600: #0284c7;
+      --blush:   #fce7f3;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { height: 100%; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 40%, #fce7f3 100%);
+      background-attachment: fixed;
+      display: flex; flex-direction: column; align-items: stretch;
+      position: relative; overflow-x: hidden; overflow-y: auto;
+      color: #1a2340;
+    }
+
+    /* Grid overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(14,165,233,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,165,233,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* Blobs */
+    .blob {
+      position: fixed; border-radius: 50%; filter: blur(62px); opacity: 0.32;
+      animation: blobFloat var(--dur, 10s) ease-in-out infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes blobFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%     { transform: translate(28px,-38px) scale(1.05); }
+      66%     { transform: translate(-18px,18px) scale(0.96); }
+    }
+
+    /* Floating icons */
+    .float-icon {
+      position: fixed; font-size: 2rem; opacity: 0.07;
+      animation: iconF var(--d,8s) ease-in-out infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes iconF {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%     { transform: translateY(-14px) rotate(9deg); }
+    }
+
+    /* Page center */
+    .page-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Logo */
+    .page-logo {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px; text-decoration: none;
+    }
+    .page-logo img {
+      height: 62px; width: auto;
+      filter: drop-shadow(0 4px 14px rgba(14,165,233,0.32));
+    }
+    .page-logo-text { font-family: 'Cormorant Garamond', serif; line-height: 1.1; }
+    .page-logo-text .brand {
+      font-size: 1.75rem; font-weight: 600; letter-spacing: 0.04em;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7, #7dd3fc);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .page-logo-text .sub {
+      font-size: 0.64rem; font-weight: 500; color: #94a3b8;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    /* ── TOGGLE SWITCH ── */
+    .toggle-wrap {
+      display: flex;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(186,230,253,0.6);
+      border-radius: 50px;
+      padding: 4px;
+      margin-bottom: 28px;
+      gap: 4px;
+      box-shadow: 0 4px 20px rgba(14,165,233,0.1);
+    }
+    .toggle-btn {
+      padding: 0.55rem 1.8rem;
+      border-radius: 50px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      background: transparent;
+      color: #64748b;
+    }
+    .toggle-btn.active {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(14,165,233,0.38);
+    }
+
+    /* Card */
+    .card {
+      background: rgba(255,255,255,0.73);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(186,230,253,0.55);
+      border-radius: 28px;
+      width: 100%; max-width: 480px;
+      box-shadow: 0 20px 80px rgba(14,165,233,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Panel inside card */
+    .panel {
+      padding: 2.6rem 2.4rem;
+      animation: cardIn 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    .panel.hidden { display: none; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Card header */
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.85rem; font-weight: 600; font-style: italic;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-align: center; margin-bottom: 0.3rem; letter-spacing: 0.03em;
+    }
+    .subtitle {
+      text-align: center; color: #94a3b8; font-size: 0.78rem;
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem;
+    }
+
+    /* Form */
+    .form-group { margin-bottom: 1.2rem; }
+    .form-label {
+      display: block; font-size: 0.76rem; font-weight: 500;
+      letter-spacing: 0.07em; color: #64748b;
+      text-transform: uppercase; margin-bottom: 0.45rem;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(248,251,255,0.85);
+      border: 1.5px solid rgba(186,230,253,0.7);
+      border-radius: 14px;
+      padding: 0.84rem 1.15rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.94rem;
+      color: #1a2340; outline: none; transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      border-color: var(--sky-400);
+      box-shadow: 0 0 0 4px rgba(56,189,248,0.12);
+      background: rgba(255,255,255,0.96);
+    }
+    .form-input::placeholder { color: #94a3b8; }
+    .form-input.valid   { border-color: #10b981; }
+    .form-input.invalid { border-color: #ef4444; }
+
+    .hint { font-size: 0.73rem; margin-top: 0.35rem; transition: color 0.3s; }
+    .hint.ok      { color: #10b981; }
+    .hint.err     { color: #ef4444; }
+    .hint.neutral { color: #94a3b8; }
+
+    /* Password strength bar */
+    .strength-bar  { height: 4px; background: rgba(186,230,253,0.35); border-radius: 10px; margin-top: 0.5rem; overflow: hidden; }
+    .strength-fill { height: 100%; width: 0%; border-radius: 10px; transition: all 0.4s ease; }
+
+    /* Button */
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: white; padding: 0.9rem; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      font-weight: 500; letter-spacing: 0.06em;
+      border: none; cursor: pointer;
+      position: relative; overflow: hidden; transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(14,165,233,0.38); margin-top: 0.5rem;
+    }
+    .btn::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 0; height: 0; background: rgba(255,255,255,0.25);
+      border-radius: 50%; transform: translate(-50%,-50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    .btn:hover::before { width: 500px; height: 500px; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(14,165,233,0.52); }
+    .btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+    .error-msg   { color: #ef4444; font-size: 0.82rem; margin-bottom: 1rem; padding: 0.65rem 0.95rem; background: rgba(239,68,68,0.07); border-radius: 12px; border: 1px solid rgba(239,68,68,0.15); display: none; }
+    .success-msg { color: #10b981; font-size: 0.85rem; margin-bottom: 1rem; padding: 0.7rem 0.95rem; background: rgba(16,185,129,0.07); border-radius: 12px; border: 1px solid rgba(16,185,129,0.2); display: none; }
+
+    .link { color: var(--sky-500); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .link:hover { color: var(--sky-600); }
+
+    .password-wrap { position: relative; }
+    .toggle-pw { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 1rem; user-select: none; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
+
+    .divider-line { border: none; border-top: 1px solid rgba(186,230,253,0.5); margin: 1.4rem 0; }
+
+    input[type="checkbox"] { accent-color: var(--sky-500); }
+
+    /* ── FOOTER ── */
+    .ft-footer {
+      width: 100%; flex-shrink: 0; position: relative; z-index: 10;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      padding: 3rem 2rem 1.6rem; box-sizing: border-box; margin: 0;
+    }
+    .ft-inner  { max-width: 900px; margin: 0 auto; }
+    .ft-grid   { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+    .ft-bottom {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding-top: 1.4rem;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: .6rem;
+    }
+    .ft-copy { color: #475569; font-size: .77rem; }
+
+    @media (max-width: 640px) {
+      .ft-grid { grid-template-columns: 1fr; gap: 1.4rem; }
+    }
+    @media (max-width: 480px) {
+      .ft-footer { padding: 2rem 1rem 1.2rem; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .page-logo img { height: 46px; }
+      .page-logo-text .brand { font-size: 1.35rem; }
+      .page-center { padding: 1.6rem 0.75rem 2rem; }
+      .panel { padding: 1.8rem 1.3rem; }
+      .card { border-radius: 20px; max-width: 100%; }
+      .card-title { font-size: 1.5rem; }
+      .form-input { padding: 0.75rem 1rem; font-size: 0.9rem; }
+      .btn { padding: 0.82rem; font-size: 0.86rem; }
+    }
+    @media (max-width: 400px) {
+      .page-logo { gap: 8px; margin-bottom: 18px; }
+      .page-logo img { height: 38px; }
+      .panel { padding: 1.4rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Blobs -->
+<div class="blob" style="--dur:12s;width:400px;height:400px;background:#bae6fd;top:-10%;left:-10%;"></div>
+<div class="blob" style="--dur:15s;animation-delay:-5s;width:300px;height:300px;background:#fce7f3;bottom:-5%;right:-8%;"></div>
+<div class="blob" style="--dur:10s;animation-delay:-2s;width:200px;height:200px;background:#ede9fe;top:40%;right:5%;"></div>
+
+<!-- Floating icons -->
+<div class="float-icon" style="--d:9s;top:15%;left:8%;">🧵</div>
+<div class="float-icon" style="--d:11s;animation-delay:-3s;top:70%;left:12%;">✂️</div>
+<div class="float-icon" style="--d:8s;animation-delay:-1s;top:20%;right:10%;">👗</div>
+<div class="float-icon" style="--d:13s;animation-delay:-6s;bottom:20%;right:8%;">🌸</div>
+
+
+<form id="loginForm" method="POST" action="{% url 'auth' %}" style="display:none">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="login">
+  <input type="hidden" id="login_username" name="username">
+  <input type="hidden" id="login_password" name="password">
+</form>
+<form id="registerForm" method="POST" action="{% url 'auth' %}" style="display:none">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="register">
+  <input type="hidden" id="reg_first_name" name="first_name">
+  <input type="hidden" id="reg_last_name" name="last_name">
+  <input type="hidden" id="reg_email" name="email">
+  <input type="hidden" id="reg_phone" name="phone">
+  <input type="hidden" id="reg_password" name="password">
+  <input type="hidden" id="reg_confirm_password" name="confirm_password">
+  <input type="hidden" id="reg_terms" name="terms">
+</form>
+<div class="page-center">
+
+  <!-- Logo -->
+  <a class="page-logo" href="{% url 'index' %}">
+    <img
+      src="{% static 'RS_Digitize_Logo.png' %}"
+      alt="RS Digitize Logo"
+      style="height:62px;width:auto;object-fit:contain;filter:drop-shadow(0 4px 14px rgba(14,165,233,0.32));"
+    />
+  </a>
+
+  <!-- Toggle -->
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="btnLogin"   onclick="showPanel('login')">Sign In</button>
+    <button class="toggle-btn"       id="btnRegister" onclick="showPanel('register')">Create Account</button>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- ═══════════════ LOGIN PANEL ═══════════════ -->
+    <div class="panel" id="panelLogin">
+      <div class="card-title">Welcome Back</div>
+      <div class="subtitle">Sign in to your account</div>
+
+      <div id="loginError"   class="error-msg"></div>
+      <div id="loginSuccess" class="success-msg"></div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="loginEmail" name="username" placeholder="you@example.com" required autocomplete="email"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="password-wrap">
+          <input class="form-input" type="password" id="loginPassword" name="password" placeholder="Enter your password" required autocomplete="current-password"/>
+          <span class="toggle-pw" onclick="togglePw('loginPassword',this)">👁️</span>
+        </div>
+      </div>
+
+      <div style="text-align:right;margin-bottom:1.5rem;">
+        <a href="#" class="link" style="font-size:0.82rem;">Forgot password?</a>
+      </div>
+
+      <button class="btn" id="loginBtn" type="button" onclick="handleLogin()">Sign In ✦</button>
+
+      <hr class="divider-line"/>
+      <p style="text-align:center;font-size:0.88rem;color:#64748b;">
+        Don't have an account? <a href="#" class="link" onclick="showPanel('register');return false;">Create one →</a>
+      </p>
+      <p style="text-align:center;margin-top:0.7rem;">
+        <a href="{% url 'index' %}" class="link" style="font-size:0.8rem;color:#94a3b8;">← Back to Home</a>
+      </p>
+    </div>
+
+    <!-- ═══════════════ REGISTER PANEL ═══════════════ -->
+    <div class="panel hidden" id="panelRegister">
+      <div class="card-title">✦ Create Account</div>
+      <div class="subtitle">Join RS Digitizing Today</div>
+
+      <div id="regError"   class="error-msg"></div>
+      <div id="regSuccess" class="success-msg"></div>
+
+      <div class="two-col">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="regFirst" name="first_name" placeholder="Ananya" oninput="validateName('regFirst','hintFirst')"/>
+          <div class="hint neutral" id="hintFirst">Enter your first name</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="regLast" name="last_name" placeholder="Sharma" oninput="validateName('regLast','hintLast')"/>
+          <div class="hint neutral" id="hintLast">Enter your last name</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="regEmail" name="email" placeholder="you@example.com" oninput="validateEmail()"/>
+        <div class="hint neutral" id="hintEmail">Enter a valid email</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" type="tel" id="regPhone" name="phone" placeholder="9876543210" maxlength="10" oninput="validatePhone()"/>
+        <div class="hint neutral" id="hintPhone">10-digit mobile number</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="password-wrap">
+          <input class="form-input" type="password" id="regPassword" name="password" placeholder="Min. 8 chars, 1 number, 1 special char" oninput="validatePassword()"/>
+          <span class="toggle-pw" onclick="togglePw('regPassword',this)">👁️</span>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="hint neutral" id="hintPassword">8+ chars with number &amp; special char</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <div class="password-wrap">
+          <input class="form-input" type="password" id="regConfirm" name="confirm_password" placeholder="Repeat your password" oninput="validateConfirm()"/>
+          <span class="toggle-pw" onclick="togglePw('regConfirm',this)">👁️</span>
+        </div>
+        <div class="hint neutral" id="hintConfirm">Both passwords must match</div>
+      </div>
+
+      <div style="margin-bottom:1.2rem;display:flex;align-items:flex-start;gap:0.75rem;">
+        <input type="checkbox" id="regTerms" name="terms" style="width:16px;height:16px;margin-top:3px;flex-shrink:0;cursor:pointer;"/>
+        <label for="regTerms" style="font-size:0.83rem;color:#64748b;cursor:pointer;line-height:1.65;">
+          I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+        </label>
+      </div>
+
+      <button class="btn" id="registerBtn" type="button" onclick="handleRegister()">Create Account ✦</button>
+
+      <hr class="divider-line"/>
+      <p style="text-align:center;font-size:0.88rem;color:#64748b;">
+        Already have an account? <a href="#" class="link" onclick="showPanel('login');return false;">Sign in →</a>
+      </p>
+      <p style="text-align:center;margin-top:0.7rem;">
+        <a href="{% url 'index' %}" class="link" style="font-size:0.8rem;color:#94a3b8;">← Back to Home</a>
+      </p>
+    </div>
+
+  </div><!-- /card -->
+</div><!-- /page-center -->
+
+<!-- FOOTER -->
+<footer class="ft-footer">
+  <div class="ft-inner">
+    <div class="ft-grid">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:.8rem;">
+          <img
+            src="https://placehold.co/40x40/38bdf8/ffffff?text=RS"
+            alt="RS Digitizing"
+            style="height:40px;width:40px;border-radius:8px;filter:drop-shadow(0 0 6px rgba(56,189,248,.3));"
+          />
+          <span style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;background:linear-gradient(135deg,#7dd3fc,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">RS Digitizing</span>
+        </div>
+        <p style="color:#64748b;font-size:.82rem;line-height:1.8;max-width:240px;">Embroidery digitizing & vector printing studio — precise, fast, based in Tiruppur, India.</p>
+        <div style="display:flex;gap:.6rem;margin-top:1rem;">
+          <div style="width:32px;height:32px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;" onmouseover="this.style.background='rgba(56,189,248,.15)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">📘</div>
+          <div style="width:32px;height:32px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;" onmouseover="this.style.background='rgba(56,189,248,.15)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">📸</div>
+          <div style="width:32px;height:32px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;" onmouseover="this.style.background='rgba(56,189,248,.15)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">🐦</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:.85rem;font-weight:500;">Services</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <a href="index.html#services" style="color:#64748b;font-size:.84rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Logo Digitizing</a>
+          <a href="index.html#services" style="color:#64748b;font-size:.84rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">3D Puff Embroidery</a>
+          <a href="index.html#services" style="color:#64748b;font-size:.84rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Screen Printing</a>
+          <a href="index.html#services" style="color:#64748b;font-size:.84rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Vinyl Cutting</a>
+          <a href="index.html#services" style="color:#38bdf8;font-size:.84rem;text-decoration:none;">Vector Art ✦</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:.85rem;font-weight:500;">Links</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <a href="{% url 'index' %}"     style="color:#64748b;font-size:.84rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Home</a>
+          <a href="{% url 'auth' %}"      style="color:#64748b;font-size:.84rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Login / Register</a>
+          <a href="{% url 'dashboard' %}" style="color:#64748b;font-size:.84rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='#64748b'">Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <p class="ft-copy">© 2026 RS Digitizing. All rights reserved. Crafted with ♥ in Tiruppur, Tamil Nadu, India.</p>
+      <p class="ft-copy"><a href="#" style="color:inherit;text-decoration:none;">Privacy Policy</a> · <a href="#" style="color:inherit;text-decoration:none;">Terms of Service</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ─── Auto-open panel from URL hash ─── */
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash === '#register') showPanel('register');
+  });
+
+  /* ─── Panel toggle ─── */
+  function showPanel(which) {
+    const isLogin = (which === 'login');
+    document.getElementById('panelLogin').classList.toggle('hidden', !isLogin);
+    document.getElementById('panelRegister').classList.toggle('hidden', isLogin);
+    document.getElementById('btnLogin').classList.toggle('active', isLogin);
+    document.getElementById('btnRegister').classList.toggle('active', !isLogin);
+    // Re-trigger animation
+    const panel = document.getElementById(isLogin ? 'panelLogin' : 'panelRegister');
+    panel.style.animation = 'none';
+    panel.offsetHeight; // reflow
+    panel.style.animation = '';
+  }
+
+  /* ─── Shared helpers ─── */
+  function togglePw(id, icon) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+    icon.textContent = el.type === 'password' ? '👁️' : '🙈';
+  }
+
+  /* ─── LOGIN ─── */
+  function handleLogin() {
+    const email    = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errEl    = document.getElementById('loginError');
+    const sucEl    = document.getElementById('loginSuccess');
+    const btn      = document.getElementById('loginBtn');
+    errEl.style.display = 'none'; sucEl.style.display = 'none';
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errEl.textContent = '⚠ Please enter a valid email address.';
+      errEl.style.display = 'block'; return;
+    }
+    // Copy values into hidden form and submit to Django
+    document.getElementById('login_username').value = email;
+    document.getElementById('login_password').value = password;
+    btn.textContent = 'Signing in...'; btn.disabled = true;
+    document.getElementById('loginForm').submit();
+  }
+
+  /* ─── REGISTER validation helpers ─── */
+  function setHint(hintId, inputId, isValid, msg) {
+    const h   = document.getElementById(hintId);
+    const inp = document.getElementById(inputId);
+    h.textContent = msg;
+    h.className = 'hint ' + (isValid ? 'ok' : 'err');
+    inp.classList.toggle('valid',   isValid);
+    inp.classList.toggle('invalid', !isValid);
+  }
+  function validateName(inputId, hintId) {
+    const val = document.getElementById(inputId).value.trim();
+    const min = (inputId === 'regLast') ? 1 : 2;
+    setHint(hintId, inputId, val.length >= min, val.length >= min ? '✓ Looks good' : (min === 1 ? 'At least 1 character required' : 'At least 2 characters required'));
+  }
+  function validateEmail() {
+    const val = document.getElementById('regEmail').value.trim();
+    const ok  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    setHint('hintEmail','regEmail', ok, ok ? '✓ Valid email' : 'Enter a valid email address');
+  }
+  function validatePhone() {
+    const val = document.getElementById('regPhone').value.replace(/\s/g,'');
+    const ok  = /^\d{10}$/.test(val);
+    setHint('hintPhone','regPhone', ok, ok ? '✓ Valid phone number' : 'Must be exactly 10 digits');
+  }
+  function validatePassword() {
+    const val      = document.getElementById('regPassword').value;
+    const hasLen   = val.length >= 8;
+    const hasNum   = /\d/.test(val);
+    const hasSpec  = /[!@#$%^&*(),.?":{}|<>_\-]/.test(val);
+    const hasUpper = /[A-Z]/.test(val);
+    let strength = 0;
+    if (hasLen) strength++; if (hasNum) strength++;
+    if (hasSpec) strength++; if (hasUpper) strength++;
+    const fill   = document.getElementById('strengthFill');
+    const colors = ['#ef4444','#f97316','#eab308','#10b981'];
+    const labels = ['Weak','Fair','Good','Strong'];
+    fill.style.width      = `${strength * 25}%`;
+    fill.style.background = colors[strength - 1] || '#ef4444';
+    const ok = hasLen && hasNum && hasSpec;
+    setHint('hintPassword','regPassword', ok,
+      ok ? `✓ ${labels[strength-1]||'Weak'} password`
+         : `Needs: ${!hasLen?'8+ chars ':''} ${!hasNum?'number ':''}${!hasSpec?'special char':''}`);
+    validateConfirm();
+  }
+  function validateConfirm() {
+    const p = document.getElementById('regPassword').value;
+    const c = document.getElementById('regConfirm').value;
+    if (!c) return;
+    setHint('hintConfirm','regConfirm', p === c, p === c ? '✓ Passwords match' : 'Passwords do not match');
+  }
+
+  /* ─── REGISTER submit ─── */
+  function handleRegister() {
+    const errEl = document.getElementById('regError');
+    const sucEl = document.getElementById('regSuccess');
+    errEl.style.display = 'none'; sucEl.style.display = 'none';
+
+    const first    = document.getElementById('regFirst').value.trim();
+    const last     = document.getElementById('regLast').value.trim();
+    const email    = document.getElementById('regEmail').value.trim();
+    const phone    = document.getElementById('regPhone').value.replace(/\s/g,'');
+    const password = document.getElementById('regPassword').value;
+    const confirm  = document.getElementById('regConfirm').value;
+    const terms    = document.getElementById('regTerms').checked;
+
+    if (first.length < 2 || last.length < 1)          { errEl.textContent='⚠ Please enter your full name.'; errEl.style.display='block'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))    { errEl.textContent='⚠ Please enter a valid email.'; errEl.style.display='block'; return; }
+    if (!/^\d{10}$/.test(phone))                       { errEl.textContent='⚠ Phone must be exactly 10 digits.'; errEl.style.display='block'; return; }
+    if (password.length < 8)                           { errEl.textContent='⚠ Password must be at least 8 characters.'; errEl.style.display='block'; return; }
+    if (!/\d/.test(password))                          { errEl.textContent='⚠ Password must contain at least one number.'; errEl.style.display='block'; return; }
+    if (!/[!@#$%^&*(),.?":{}|<>_\-]/.test(password)) { errEl.textContent='⚠ Password must contain at least one special character.'; errEl.style.display='block'; return; }
+    if (password !== confirm)                          { errEl.textContent='⚠ Passwords do not match.'; errEl.style.display='block'; return; }
+    if (!terms)                                        { errEl.textContent='⚠ Please accept the Terms of Service.'; errEl.style.display='block'; return; }
+
+    // Copy values into hidden form and submit to Django
+    document.getElementById('reg_first_name').value = first;
+    document.getElementById('reg_last_name').value = last;
+    document.getElementById('reg_email').value = email;
+    document.getElementById('reg_phone').value = phone;
+    document.getElementById('reg_password').value = password;
+    document.getElementById('reg_confirm_password').value = confirm;
+    document.getElementById('reg_terms').value = terms ? 'on' : '';
+
+    const btn = document.getElementById('registerBtn');
+    btn.textContent = 'Creating account...'; btn.disabled = true;
+    document.getElementById('registerForm').submit();
+  }
+</script>
+
+<!-- Django Messages -->
+{% if errors.login %}
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    showPanel('login');
+    var el = document.getElementById('loginError');
+    if(el) { el.textContent = "{{ errors.login }}"; el.style.display='block'; }
+  });
+</script>
+{% endif %}
+{% if errors.register %}
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    showPanel('register');
+    var el = document.getElementById('regError');
+    if(el) { el.textContent = "{{ errors.register }}"; el.style.display='block'; }
+  });
+</script>
+{% endif %}
+{% if panel == 'register' %}
+<script>
+  window.addEventListener('DOMContentLoaded', function() { showPanel('register'); });
+</script>
+{% endif %}
+</body>
+</html>
