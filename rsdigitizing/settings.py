@@ -46,7 +46,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'rsdigitizing.wsgi.application'
+WSGI_APPLICATION = 'rsdigitizing.wsgi'
 
 DATABASES = {
     'default': {
