@@ -6,8 +6,8 @@ SECRET_KEY = 'django-insecure-rs-digitizing-change-in-production-xyz-2026'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS=['web-app-fhy6.onrender.com']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,7 +58,7 @@ DATABASES = {
 AUTH_USER_MODEL = 'core.User'
 
 AUTH_PASSWORD_VALIDATORS = []
-
+CSRF_TRUSTED_ORIGINS = ['https://web-app-fhy6.onrender.com']
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
