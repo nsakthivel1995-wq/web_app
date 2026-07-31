@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-rs-digitizing-change-in-production-xyz-2026'
 DEBUG = True
 
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS=['web-app-fhy6.onrender.com']
+ALLOWED_HOSTS=['web-app-fhy6.onrender.com','*']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
